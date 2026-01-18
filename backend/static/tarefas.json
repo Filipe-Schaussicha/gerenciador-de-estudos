@@ -1,0 +1,64 @@
+[
+  {
+    "data": "2026-01-15",
+    "aberto": true,
+    "tarefas": [
+      {
+        "nome": "Add subtarefas",
+        "feito": false,
+        "subtarefas": []
+      },
+      {
+        "nome": "Adicionar tarefas de uma maneira melhor",
+        "feito": true,
+        "subtarefas": []
+      },
+      {
+        "nome": "Apagar tarefas",
+        "feito": true,
+        "subtarefas": []
+      },
+      {
+        "nome": "Mover tarefas",
+        "feito": true,
+        "subtarefas": []
+      }
+    ]
+  },
+  {
+    "data": "2026-01-16",
+    "aberto": true,
+    "tarefas": [
+      {
+        "nome": "Melhorar carregamento das tarefas",
+        "feito": false,
+        "subtarefas": []
+      },
+      {
+        "nome": "Adicionar aba projetos",
+        "feito": false,
+        "subtarefas": []
+      },
+      {
+        "nome": "adicionar aba \"id\u00e9ias\"",
+        "feito": false,
+        "subtarefas": []
+      }
+    ]
+  },
+  {
+    "data": "2026-01-17",
+    "aberto": true,
+    "tarefas": []
+  },
+  {
+    "data": "2026-01-18",
+    "aberto": true,
+    "tarefas": []
+  },
+  {
+    "data": "2026-01-23",
+    "aberto": true,
+    "tarefas": []
+  }
+]
