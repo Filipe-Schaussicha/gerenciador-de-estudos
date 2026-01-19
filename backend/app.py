@@ -1,12 +1,10 @@
 from flask import Flask, session, request
 from flask_session import Session
 import json
-from helpers import is_data_list, ler_json, salvar_json, login_required
+from helpers import is_data_list, ler_json, salvar_json, login_required, get_index_data
 from flask_cors import CORS
 
 app = Flask(__name__)
-
-app.secret_key = '3789'
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
@@ -17,6 +15,92 @@ usuarios = [
   {'id': 1, 'user': 'filipe', 'senha': 'filipe378'}
 ]
 
+
+@app.route('/checkar_tarefa')
+def checar_tarefa():
+  """ Salva se uma tarefa foi checada ou não """
+  if "user_id" not in session:
+    return json.dumps({"ok": False}), 401
+  
+  if not request.args.get('tipo') or not request.args.get('pai') or not request.args.get('i') or not request.args.get('valor'):
+    return 'erro', 400
+  
+  tipo = request.args.get('tipo')
+  pai = request.args.get('pai')
+  i = int(request.args.get('i'))
+  valor =  True if request.args.get('valor') == 'true' else False
+
+  if tipo == 'data':
+    dados = ler_json()
+    dados[get_index_data(dados, pai)]["tarefas"][i]["feito"] = valor
+    salvar_json(dados)
+
+  return 'sucess', 200
+
+@app.route('/add_tarefa')
+def add_tarefa():
+  """ adiciona tarefa ao arquivo .json """
+  if "user_id" not in session:
+    return json.dumps({"ok": False}), 401
+  
+  if not request.args.get('data') or not request.args.get('texto'):
+    return 'erro', 400
+  
+  dados = ler_json()
+  
+  data = request.args.get('data')
+  texto = request.args.get('texto')
+
+  nova_tarefa = {
+    "nome": texto,
+    "feito": False,
+    "subtarefas": []
+  }
+
+  dados[get_index_data(dados, data)]["tarefas"].append(nova_tarefa)
+
+  salvar_json(dados)
+
+  return 'sucess', 200
+
+@app.route('/remover_data')
+def remover_data():
+  """ Remove datas """
+  if "user_id" not in session:
+    return json.dumps({"ok": False}), 401
+
+  if not request.args.get('data'):
+    return json.dumps({"ok": False}), 400
+  
+  dados = ler_json()
+
+  data_remover = request.args.get('data')
+  novos_dados = [data for data in dados if data['data'] != data_remover]
+
+  salvar_json(novos_dados)
+
+  return json.dumps({"ok": True})
+
+@app.route('/abrir_data')
+def abrir_data():
+  """Salva se uma data teve as tarefas mostradas ou não"""
+
+  if "user_id" not in session:
+    return json.dumps({"ok": False}), 401
+  
+  if not request.args.get('data') or not request.args.get('valor'):
+    return 'erro', 400
+  
+  dados = ler_json()
+
+  data = request.args.get('data')
+  valor =  True if request.args.get('valor') == 'true' else False
+
+  dados[get_index_data(dados, data)]['aberto'] = valor
+
+  salvar_json(dados)
+
+  return 'sucess', 200
 
 @app.route('/add_data')
 def add_data():

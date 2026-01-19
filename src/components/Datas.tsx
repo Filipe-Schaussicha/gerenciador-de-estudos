@@ -1,7 +1,12 @@
+import { useState, type FormEvent } from "react";
+import enderecoBack from "../others/VarsGlobal";
+import Tarefas from "./Tarefas";
+
 interface Props{
     children: string,
     tarefas: [],
-    tarefasAbertas: boolean
+    tarefasAbertas: boolean,
+    onChange: () => void
 }
 
 function Datas(props: Props){
@@ -35,14 +40,82 @@ function Datas(props: Props){
         return <p className="bg-green-100 bg-red-100 bg-blue-100"></p>
     }
 
+    const [tarefasAMostra, setTarefasAMostra] = useState(props.tarefasAbertas)
+    const [addTarefaAMostra, setAddTarefaAMostra] = useState(false);
+    const [textoInput, setTextoInput] = useState('')
+
     return (
     <article className={'flex flex-col mt-1.5 rounded-xl p-3 max-sm:text-sm bg-'+cor+'-100'}>
-        <h3 className="font-medium">
-            {data.getDate() +'/'+ (data.getMonth()+1)+'/'+data.getFullYear()+' '+diasSemana[data.getDay()]}
-        </h3>
+        {/* Data e seus botões */}
+        <div className="flex"> 
+
+            {tarefasAMostra ?
+                <button className="mr-3" onClick={()=>{setTarefasAMostra(false); abre_fecha_tarefas(props.children, false)}}><i className="fa-solid fa-chevron-up"></i></button>
+                :
+                <button className="mr-3" onClick={()=>{setTarefasAMostra(true); abre_fecha_tarefas(props.children, true)}}><i className="fa-solid fa-chevron-down"></i></button>
+            }
+
+            <h3 className="font-medium">
+                {data.getDate() +'/'+ (data.getMonth()+1)+'/'+data.getFullYear()+' '+diasSemana[data.getDay()]}
+            </h3>
+
+            <div className="ml-auto">
+                <button className="mr-3" onClick={()=>{remove_data(props.children); props.onChange()}}><i className="fa-solid fa-trash"></i></button>
+
+                {addTarefaAMostra ?
+                    <button onClick={()=>{setAddTarefaAMostra(false); }}><i className="fa-solid fa-x"></i></button>
+                    :
+                    <button onClick={()=>{setAddTarefaAMostra(true); setTarefasAMostra(true); }}><i className="fa-solid fa-plus"></i></button>
+                }
+            </div>
+        </div>
+
+        {/* Menu para adiconar tarefas */}
+        {addTarefaAMostra &&
+            <form className="my-3" onSubmit={(e)=>{add_tarefa(e); props.onChange(); setTextoInput('')}}>
+                <input type="hidden" name="data" value={props.children} />
+                <input name="texto" value={textoInput} onChange={(e)=>setTextoInput(e.currentTarget.value)} 
+                className="bg-white mb-2 max-w-full rounded-xl p-2 block mx-auto" autoComplete="off" />
+                <button type="submit" className="bg-green-400 hover:bg-green-500 px-3 py-1 rounded-xl font-medium block mx-auto">
+                    Add Tarefa
+                </button>
+            </form>
+        }
+        
+        {/* Lista de Tarefas */}
+        {props.tarefas.length > 0 && tarefasAMostra && <div className="mt-3">
+            {props.tarefas.map((tarefa, i) => (<Tarefas tipoPai="data" pai={props.children} key={i} i={i} subtarefas={tarefa['subtarefas']} feito={tarefa['feito']}>{tarefa['nome']}</Tarefas>))}
+        </div>}
     </article>
     )
 
+}
+
+function add_tarefa(e: FormEvent<HTMLFormElement>){
+    e.preventDefault()
+
+    const form = new FormData(e.currentTarget);
+
+    const data = form.get('data') as string;
+    const texto = form.get('texto') as string;
+
+    fetch(`${enderecoBack}/add_tarefa?data=${data}&texto=${texto}`, {credentials: 'include'}).then(res =>{
+        if(!res.ok){
+            alert(`Não foi possível adicionar a tarefas ${texto}`)
+        }
+    }).catch((e)=>alert(`Erro: ${e}`))
+}
+
+function remove_data(data:string){
+    fetch(`${enderecoBack}/remover_data?data=${data}`, {credentials: 'include'}).then(res =>
+        !res.ok && alert(`Não foi possível remover ${data}`)
+    ).catch(()=>alert(`Erro: Não foi possível remover ${data}`))
+}
+
+function abre_fecha_tarefas(data: string, valor: boolean){
+    fetch(`${enderecoBack}/abrir_data?data=${data}&valor=${valor}`, {credentials: 'include'}).then(res =>
+        !res.ok && alert(`Não foi possível setar ${data} como aberto: ${valor}`)
+    ).catch(()=>alert(`Erro: Não foi possível setar ${data} como aberto: ${valor}`))
 }
 
 // Compara se uma data é maior, igual ou menor que outra

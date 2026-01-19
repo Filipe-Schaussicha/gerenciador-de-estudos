@@ -25,3 +25,10 @@ def login_required(fn):
             return jsonify({"error": "unauthorized"}), 401
         return fn(*args, **kwargs)
     return wrapper
+
+def get_index_data(dados, data):
+    for i, dia in enumerate(dados):
+        if dia['data'] == data:
+            return i
+
+    return -1

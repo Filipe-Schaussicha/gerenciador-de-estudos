@@ -6,7 +6,7 @@ interface Props{
     className: string
 }
 
-const Tarefas = (props: Props) => {
+const ListaTarefas = (props: Props) => {
 
     // Adiciona tarefas
     function add_tarefa(e : FormEvent<HTMLFormElement>){
@@ -68,10 +68,12 @@ const Tarefas = (props: Props) => {
         <div className="mt-3">
             {tarefasCarregadas == 0 && <p>Carregando Tarefas</p>}
             {tarefasCarregadas == -1 && <p>Erro ao carregar tarefas</p>}
-            {tarefasCarregadas == 1 && tarefas.map(tarefa=> (<Datas tarefasAbertas={tarefa['aberto']} key={tarefa["data"]} tarefas={tarefa['tarefas']}>{tarefa["data"]}</Datas>))}
+            {tarefasCarregadas == 1 && tarefas.map(tarefa=>(
+                <Datas onChange={()=>setRecarregar(true)} tarefasAbertas={tarefa['aberto']} key={tarefa["data"]} tarefas={tarefa['tarefas']}>{tarefa["data"]}</Datas>
+            ))}
         </div>
     </section>
   )
 }
 
-export default Tarefas
+export default ListaTarefas

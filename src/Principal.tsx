@@ -1,6 +1,6 @@
 import Ciclo from "./pages/Ciclo"
 import Pomodoro from "./pages/Pomodoro"
-import Tarefas from "./pages/Tarefas"
+import ListaTarefas from "./pages/ListaTarefas"
 
 function Principal(){
     const clases = 'p-10 text-center'
@@ -9,7 +9,7 @@ function Principal(){
     <>
         <div className="bg-amber-50 grid grid-cols-3 min-h-screen max-lg:grid-cols-1">
             {/* Lista de tarefas */}
-            <Tarefas className={clases + ' bg-orange-50'} />
+            <ListaTarefas className={clases + ' bg-orange-50'} />
 
             {/* Pomodoro timer */}
             <Pomodoro className={clases + ' bg-orange-100'} />

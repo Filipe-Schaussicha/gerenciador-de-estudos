@@ -1,42 +1,11 @@
 [
   {
-    "data": "2026-01-01",
-    "aberto": false,
-    "tarefas": []
-  },
-  {
-    "data": "2026-01-15",
-    "aberto": true,
-    "tarefas": [
-      {
-        "nome": "Add subtarefas",
-        "feito": false,
-        "subtarefas": []
-      },
-      {
-        "nome": "Adicionar tarefas de uma maneira melhor",
-        "feito": true,
-        "subtarefas": []
-      },
-      {
-        "nome": "Apagar tarefas",
-        "feito": true,
-        "subtarefas": []
-      },
-      {
-        "nome": "Mover tarefas",
-        "feito": true,
-        "subtarefas": []
-      }
-    ]
-  },
-  {
     "data": "2026-01-16",
     "aberto": true,
     "tarefas": [
       {
         "nome": "Melhorar carregamento das tarefas",
-        "feito": false,
+        "feito": true,
         "subtarefas": []
       },
       {
@@ -57,48 +26,30 @@
     "tarefas": []
   },
   {
-    "data": "2026-01-18",
-    "aberto": true,
-    "tarefas": []
-  },
-  {
     "data": "2026-01-19",
-    "aberto": false,
-    "tarefas": []
+    "aberto": true,
+    "tarefas": [
+      {
+        "nome": "outro teste",
+        "feito": false,
+        "subtarefas": []
+      }
+    ]
   },
   {
     "data": "2026-01-20",
-    "aberto": false,
-    "tarefas": []
-  },
-  {
-    "data": "2026-01-22",
-    "aberto": false,
-    "tarefas": []
-  },
-  {
-    "data": "2026-01-23",
     "aberto": true,
-    "tarefas": []
-  },
-  {
-    "data": "2026-01-24",
-    "aberto": false,
-    "tarefas": []
-  },
-  {
-    "data": "2026-01-25",
-    "aberto": false,
-    "tarefas": []
-  },
-  {
-    "data": "2026-01-29",
-    "aberto": false,
-    "tarefas": []
-  },
-  {
-    "data": "2026-01-30",
-    "aberto": false,
-    "tarefas": []
+    "tarefas": [
+      {
+        "nome": "teste123",
+        "feito": false,
+        "subtarefas": []
+      },
+      {
+        "nome": "teste2",
+        "feito": false,
+        "subtarefas": []
+      }
+    ]
   }
 ]
