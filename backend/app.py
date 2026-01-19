@@ -1,8 +1,9 @@
 from flask import Flask, session, request
 from flask_session import Session
-import json
-from helpers import is_data_list, ler_json, salvar_json, login_required, get_index_data
+from helpers import is_data_list, ler_json, salvar_json, login_required, get_index_data, achar_tarefa_data, contatenar_arvore_tarefas
 from flask_cors import CORS
+import json
+import uuid
 
 app = Flask(__name__)
 
@@ -15,6 +16,51 @@ usuarios = [
   {'id': 1, 'user': 'filipe', 'senha': 'filipe378'}
 ]
 
+@app.route('/mover_tarefa')
+def mover_tarefa():
+  if "user_id" not in session:
+    return json.dumps({"ok": False}), 401
+  if not request.args.get('id') or not request.args.get('arquivo') or not request.args.get('nova_pos'):
+    return 'erro', 400
+  
+  dados = ler_json(caminho=request.args.get('arquivo'))
+  _, tarefas, i = achar_tarefa_data(dados, request.args.get('id'))
+  new_i = int(request.args.get('nova_pos')) + i
+
+  if tarefas == None or new_i < 0 or new_i >= len(tarefas):
+    return 'erro', 400
+  
+  tarefas[i], tarefas[new_i] = tarefas[new_i], tarefas[i]
+
+  # Criar um route próprio
+  teste = []
+  for data in dados:
+    teste.extend(contatenar_arvore_tarefas(data['tarefas']))
+  print(teste)
+
+  salvar_json(dados, caminho=request.args.get('arquivo'))  
+  return 'sucess', 200
+
+@app.route('/deletar_tarefa')
+def deletar_tarefa_route():
+  """ Deleta tarefas """
+  if "user_id" not in session:
+    return json.dumps({"ok": False}), 401
+  if not request.args.get('id') or not request.args.get('arquivo'):
+    return 'erro', 400
+  
+  dados = ler_json(caminho=request.args.get('arquivo'))
+
+  _, tarefas, i = achar_tarefa_data(dados, request.args.get('id'))
+
+  if tarefas == None:
+    return 'erro', 400
+  
+  tarefas.pop(i)
+
+  salvar_json(dados, caminho=request.args.get('arquivo'))  
+  return 'sucess', 200
+
 
 @app.route('/checkar_tarefa')
 def checar_tarefa():
@@ -22,18 +68,22 @@ def checar_tarefa():
   if "user_id" not in session:
     return json.dumps({"ok": False}), 401
   
-  if not request.args.get('tipo') or not request.args.get('pai') or not request.args.get('i') or not request.args.get('valor'):
+  if not request.args.get('tipo') or not request.args.get('id_tarefa') or not request.args.get('valor'):
     return 'erro', 400
   
   tipo = request.args.get('tipo')
-  pai = request.args.get('pai')
-  i = int(request.args.get('i'))
+  id = request.args.get('id_tarefa')
   valor =  True if request.args.get('valor') == 'true' else False
 
-  if tipo == 'data':
-    dados = ler_json()
-    dados[get_index_data(dados, pai)]["tarefas"][i]["feito"] = valor
-    salvar_json(dados)
+  dados = ler_json(caminho=tipo)
+
+  tarefa, _, _ = achar_tarefa_data(dados, id)
+  if tarefa == None:
+    return 'erro', 400
+
+  tarefa['feito'] = valor
+
+  salvar_json(dados, caminho=tipo)
 
   return 'sucess', 200
 
@@ -52,6 +102,7 @@ def add_tarefa():
   texto = request.args.get('texto')
 
   nova_tarefa = {
+    "id": str(uuid.uuid4()),
     "nome": texto,
     "feito": False,
     "subtarefas": []
@@ -59,9 +110,11 @@ def add_tarefa():
 
   dados[get_index_data(dados, data)]["tarefas"].append(nova_tarefa)
 
-  salvar_json(dados)
-
-  return 'sucess', 200
+  if dados:
+    salvar_json(dados)
+    return 'sucess', 200
+  else:
+    return 'erro', 400 
 
 @app.route('/remover_data')
 def remover_data():

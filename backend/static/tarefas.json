@@ -1,27 +1,6 @@
 [
   {
-    "data": "2026-01-16",
-    "aberto": true,
-    "tarefas": [
-      {
-        "nome": "Melhorar carregamento das tarefas",
-        "feito": true,
-        "subtarefas": []
-      },
-      {
-        "nome": "Adicionar aba projetos",
-        "feito": false,
-        "subtarefas": []
-      },
-      {
-        "nome": "adicionar aba \"id\u00e9ias\"",
-        "feito": false,
-        "subtarefas": []
-      }
-    ]
-  },
-  {
-    "data": "2026-01-17",
+    "data": "2026-01-18",
     "aberto": true,
     "tarefas": []
   },
@@ -30,7 +9,20 @@
     "aberto": true,
     "tarefas": [
       {
-        "nome": "outro teste",
+        "id": "3eb46814-78aa-4399-88d1-6a695bec16c4",
+        "nome": "Adicionar sistema de subtarefas",
+        "feito": false,
+        "subtarefas": []
+      },
+      {
+        "id": "146a4297-1706-416f-9070-b18c5ca1078d",
+        "nome": "novo teste",
+        "feito": false,
+        "subtarefas": []
+      },
+      {
+        "id": "2f72edd5-1613-49d2-83a6-aeed8a004e97",
+        "nome": "teste final",
         "feito": false,
         "subtarefas": []
       }
@@ -41,12 +33,8 @@
     "aberto": true,
     "tarefas": [
       {
-        "nome": "teste123",
-        "feito": false,
-        "subtarefas": []
-      },
-      {
-        "nome": "teste2",
+        "id": "91fdaa62-8db3-4b63-881e-678c165c9508",
+        "nome": "Adicionar pomodoro timer",
         "feito": false,
         "subtarefas": []
       }

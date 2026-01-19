@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { use, useState, type FormEvent } from "react";
 import enderecoBack from "../others/VarsGlobal";
 import Tarefas from "./Tarefas";
 
@@ -41,8 +41,9 @@ function Datas(props: Props){
     }
 
     const [tarefasAMostra, setTarefasAMostra] = useState(props.tarefasAbertas)
-    const [addTarefaAMostra, setAddTarefaAMostra] = useState(false);
+    const [addTarefaAMostra, setAddTarefaAMostra] = useState(false)
     const [textoInput, setTextoInput] = useState('')
+    const [addSubtarefa, setAddSubtarefa] = useState(false)
 
     return (
     <article className={'flex flex-col mt-1.5 rounded-xl p-3 max-sm:text-sm bg-'+cor+'-100'}>
@@ -73,7 +74,13 @@ function Datas(props: Props){
         {/* Menu para adiconar tarefas */}
         {addTarefaAMostra &&
             <form className="my-3" onSubmit={(e)=>{add_tarefa(e); props.onChange(); setTextoInput('')}}>
-                <input type="hidden" name="data" value={props.children} />
+                <label htmlFor="toggleSubtarefa">Adicionar Subtarefa: </label>
+                <input name="toggleSubtarefa" className="mr-1.5 text-xl" type="checkbox" onClick={()=>setAddSubtarefa(!addSubtarefa)} checked={addSubtarefa} />
+                <br />
+                <select className={`${addSubtarefa ? 'bg-white' : 'bg-gray-50'} p-1 my-1.5`} name="tarefaPai" disabled={!addSubtarefa} required={addSubtarefa}>
+                    <option disabled value="">Selecione uma tarefa</option>
+                </select>
+                {!addSubtarefa && <input type="hidden" name="data" value={props.children} /> }
                 <input name="texto" value={textoInput} onChange={(e)=>setTextoInput(e.currentTarget.value)} 
                 className="bg-white mb-2 max-w-full rounded-xl p-2 block mx-auto" autoComplete="off" />
                 <button type="submit" className="bg-green-400 hover:bg-green-500 px-3 py-1 rounded-xl font-medium block mx-auto">
@@ -84,7 +91,19 @@ function Datas(props: Props){
         
         {/* Lista de Tarefas */}
         {props.tarefas.length > 0 && tarefasAMostra && <div className="mt-3">
-            {props.tarefas.map((tarefa, i) => (<Tarefas tipoPai="data" pai={props.children} key={i} i={i} subtarefas={tarefa['subtarefas']} feito={tarefa['feito']}>{tarefa['nome']}</Tarefas>))}
+            {props.tarefas.map((tarefa, i) => (
+                <Tarefas 
+                    onChange={props.onChange} 
+                    tipoPai="tarefas" 
+                    key={tarefa['id']} 
+                    id={tarefa['id']} 
+                    subtarefas={tarefa['subtarefas']} 
+                    feito={tarefa['feito']}
+                    isComeco={i == 0}
+                    isFim={i + 1 == props.tarefas.length}
+                    >{tarefa['nome']}
+                </Tarefas>)
+            )}
         </div>}
     </article>
     )

@@ -9,14 +9,14 @@ def is_data_list(lista, data):
         
     return False
 
-def ler_json(caminho='static/tarefas.json'):
-    with open(caminho, 'r') as tasks:
+def ler_json(caminho='tarefas'):
+    with open(f'static/{caminho}.json', 'r') as tasks:
         dados = json.load(tasks)
 
     return dados
 
-def salvar_json(dados, caminho='static/tarefas.json'):
-    with open(caminho, 'w') as tasks:
+def salvar_json(dados, caminho='tarefas'):
+    with open(f'static/{caminho}.json', 'w') as tasks:
         tasks.write(json.dumps(dados, indent=2))
 
 def login_required(fn):
@@ -32,3 +32,38 @@ def get_index_data(dados, data):
             return i
 
     return -1
+
+def achar_tarefa_data(dados: list, id_tarefa: str):
+    for data in dados:
+        tarefa, tarefas_pai, i = achar_tarefa(data['tarefas'], id_tarefa)
+        if tarefa != None:
+            return tarefa, tarefas_pai, i
+        
+    return None, None, None
+
+def achar_tarefa(tarefas: list, id_tarefa: str):
+    """
+    Procura uma tarefa por seu id
+    """
+    for i, tarefa in enumerate(tarefas):
+        if tarefa['id'] == id_tarefa:
+            return tarefa, tarefas, i
+        
+        encontrada, pai_encontrada, i_encontrada = achar_tarefa(tarefa['subtarefas'], id_tarefa)
+        if encontrada:
+            return encontrada, pai_encontrada, i_encontrada
+        
+    return None, None, None
+
+def contatenar_arvore_tarefas(tarefas: list, texto=''):
+    arr = []
+
+    for tarefa in tarefas:
+        if texto == '':
+            novo_texto = tarefa['nome']
+        else:
+            novo_texto = f"{texto} -> {tarefa['nome']}"
+        arr.append({'texto': novo_texto, 'id': tarefa['id']})
+        arr = arr + contatenar_arvore_tarefas(tarefa.get('subtarefas', []), texto=novo_texto)
+    
+    return arr
