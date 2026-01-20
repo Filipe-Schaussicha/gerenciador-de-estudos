@@ -17,16 +17,19 @@ const Pomodoro = (props: Props) => {
   const [timeMinuts, setTimeMinuts] = useState(25)
   const [ciclo, setCiclo] = useState(1)
 
+  // Diminui um segundo por segundo
   useEffect(()=>{
     const timer = setTimeout(() => timerAtivo && setTimeSeconds(timeSeconds-1), 1000)
     return () => clearTimeout(timer)
   }, [timerAtivo, timeSeconds])
 
+  // Reseta os segundo
   if(timeSeconds < 0){
     setTimeSeconds(59);
     setTimeMinuts(timeMinuts - 1)
   }
 
+  // Reseta os minutos quando chega a 0
   if(timeMinuts < 0){
     if(tipoTimer == 0){
       setCiclo(ciclo + 1)
@@ -43,6 +46,7 @@ const Pomodoro = (props: Props) => {
     }
   }
 
+  // Adiciona um zero a esquerda se necessário
   let segundos = String(timeSeconds)
   if (segundos.length < 2){
     segundos = '0'+segundos;
@@ -78,7 +82,7 @@ const Pomodoro = (props: Props) => {
     </section>
   )
 
-  return <p className="hover:bg-red-300 hover:bg-green-300 hover:bg-blue-300 bg-red-200 bg-blue-200 bg-green-200">a</p>
+  return <p className="bg-red-200 bg-blue-200 bg-green-200">a</p>
 }
 
 export default Pomodoro
