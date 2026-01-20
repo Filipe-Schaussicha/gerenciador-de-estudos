@@ -62,8 +62,8 @@ def contatenar_arvore_tarefas(tarefas: list, texto=''):
         if texto == '':
             novo_texto = tarefa['nome']
         else:
-            novo_texto = f"{texto} -> {tarefa['nome']}"
+            novo_texto = f"{texto}{tarefa['nome']}"
         arr.append({'texto': novo_texto, 'id': tarefa['id']})
-        arr = arr + contatenar_arvore_tarefas(tarefa.get('subtarefas', []), texto=novo_texto)
+        arr = arr + contatenar_arvore_tarefas(tarefa.get('subtarefas', []), texto=texto + '-')
     
     return arr

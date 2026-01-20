@@ -16,6 +16,40 @@ usuarios = [
   {'id': 1, 'user': 'filipe', 'senha': 'filipe378'}
 ]
 
+@app.route('/add_subtarefa')
+def add_subtarefa():
+  if "user_id" not in session:
+    return json.dumps({"ok": False}), 401
+  if not request.args.get('id') or not request.args.get('texto'):
+    return 'erro', 400
+  
+  dados = ler_json()
+  tarefa, _, _ = achar_tarefa_data(dados, request.args.get('id'))
+
+  nova_tarefa = {
+    "id": str(uuid.uuid4()),
+    "nome": request.args.get('texto'),
+    "feito": False,
+    "subtarefas": []
+  }
+
+  tarefa['subtarefas'].append(nova_tarefa)
+
+  salvar_json(dados)
+  return 'sucess', 200
+
+@app.route('/todas_tarefas_data')
+def todas_tarefas_data():
+  if "user_id" not in session:
+    return json.dumps({"ok": False}), 401
+  if not request.args.get('data'):
+    return 'erro', 400
+  
+  dados = ler_json()
+  data = request.args.get('data')
+
+  return json.dumps(contatenar_arvore_tarefas(dados[get_index_data(dados, data)]['tarefas']))
+
 @app.route('/mover_tarefa')
 def mover_tarefa():
   if "user_id" not in session:
@@ -31,12 +65,6 @@ def mover_tarefa():
     return 'erro', 400
   
   tarefas[i], tarefas[new_i] = tarefas[new_i], tarefas[i]
-
-  # Criar um route próprio
-  teste = []
-  for data in dados:
-    teste.extend(contatenar_arvore_tarefas(data['tarefas']))
-  print(teste)
 
   salvar_json(dados, caminho=request.args.get('arquivo'))  
   return 'sucess', 200
@@ -82,7 +110,7 @@ def checar_tarefa():
     return 'erro', 400
 
   tarefa['feito'] = valor
-
+  
   salvar_json(dados, caminho=tipo)
 
   return 'sucess', 200

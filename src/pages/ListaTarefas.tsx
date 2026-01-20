@@ -19,6 +19,7 @@ const ListaTarefas = (props: Props) => {
             if(res.ok){
                 setLogAddData(1);
                 setRecarregar(true);
+                setDataImput('')
             }else{
                 setLogAddData(0)
             }
@@ -32,6 +33,8 @@ const ListaTarefas = (props: Props) => {
     // Carregar tarefas
     const [tarefasCarregadas, setTarefasCarregadas] = useState(0);
     const [tarefas, setTarefas] = useState([]);
+
+    const [dataInput, setDataImput] = useState('')
 
     // Carrega tarefas
     useEffect(() => {fetch(`${enderecoBack}/ler_tarefas`, {credentials: 'include'}).then( res=>
@@ -51,7 +54,7 @@ const ListaTarefas = (props: Props) => {
             <div className="bg-orange-100 mt-3 rounded-xl p-3 flex flex-col" id="add_tarefa" >
                 <button onClick={() => {setMenuAddData(false); setLogAddData(-1)}} className="ml-auto"><i className="fa-solid fa-x"></i></button>
                 <form onSubmit={add_tarefa}/* Programar onSubmit */>
-                    <input type="date" name="data" id="data" className="bg-white mb-2 max-w-full rounded-xl p-2 mx-auto" required />
+                    <input value={dataInput} onChange={(e)=>setDataImput(e.target.value)} type="date" name="data" id="data" className="bg-white mb-2 max-w-full rounded-xl p-2 mx-auto" required />
                     {logAddData == 0 && <p className="text-red-500">Erro!</p>}
                     {logAddData == 1 && <p className="text-green-500">Data adicionada!</p>}
                     <button type="submit" className="bg-green-400 hover:bg-green-500 px-3 py-1 rounded-xl font-medium block mx-auto" id="add_data">Adicionar data</button>

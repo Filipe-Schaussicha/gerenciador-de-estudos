@@ -18,7 +18,14 @@ function Tarefas(props: Props){
     // Marca tarefas
     function marcar_tarefa_como_feita(valor: boolean){
         fetch(`${enderecoBack}/checkar_tarefa?tipo=${props.tipoPai}&id_tarefa=${props.id}&valor=${valor}`, {credentials:'include'}).then(
-            res => !res.ok ? alert(`Não foi possível mudar tarefa ${props.children} como checado=${valor}`): setFeito(valor)
+            res => {
+                if(res.ok){
+                    setFeito(valor);
+                    props.onChange() 
+                }else{
+                    alert(`Não foi possível mudar tarefa ${props.children} como checado=${valor}`)
+                }
+            }
         ).catch((e)=>alert(`Erro: ${e}`))
     }
     

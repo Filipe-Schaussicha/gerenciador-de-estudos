@@ -1,30 +1,27 @@
 [
   {
-    "data": "2026-01-18",
-    "aberto": true,
-    "tarefas": []
-  },
-  {
     "data": "2026-01-19",
     "aberto": true,
     "tarefas": [
       {
         "id": "3eb46814-78aa-4399-88d1-6a695bec16c4",
         "nome": "Adicionar sistema de subtarefas",
-        "feito": false,
-        "subtarefas": []
-      },
-      {
-        "id": "146a4297-1706-416f-9070-b18c5ca1078d",
-        "nome": "novo teste",
-        "feito": false,
-        "subtarefas": []
-      },
-      {
-        "id": "2f72edd5-1613-49d2-83a6-aeed8a004e97",
-        "nome": "teste final",
-        "feito": false,
-        "subtarefas": []
+        "feito": true,
+        "subtarefas": [
+          {
+            "id": "1",
+            "nome": "Poder adicionar novas subtarefas",
+            "feito": true,
+            "subtarefas": [
+              {
+                "id": "2",
+                "nome": "Mais uma subtarefa",
+                "feito": true,
+                "subtarefas": []
+              }
+            ]
+          }
+        ]
       }
     ]
   },
@@ -35,6 +32,126 @@
       {
         "id": "91fdaa62-8db3-4b63-881e-678c165c9508",
         "nome": "Adicionar pomodoro timer",
+        "feito": false,
+        "subtarefas": []
+      },
+      {
+        "id": "6d785856-a466-475f-987f-aceabfc371c9",
+        "nome": "Fazer p\u00e9 de moleque",
+        "feito": false,
+        "subtarefas": []
+      }
+    ]
+  },
+  {
+    "data": "2026-01-21",
+    "aberto": true,
+    "tarefas": [
+      {
+        "id": "27d74877-1141-4e4c-bfb5-e7a19e4e72f9",
+        "nome": "Buscar exames",
+        "feito": false,
+        "subtarefas": []
+      },
+      {
+        "id": "75467077-9d47-4463-8e29-f5520ab1665b",
+        "nome": "Fazer p\u00e3o",
+        "feito": false,
+        "subtarefas": []
+      }
+    ]
+  },
+  {
+    "data": "2026-01-22",
+    "aberto": true,
+    "tarefas": [
+      {
+        "id": "efe84d86-93cd-447e-a50b-287da363d11d",
+        "nome": "Buscar Fraudas",
+        "feito": false,
+        "subtarefas": []
+      },
+      {
+        "id": "e64303bc-4729-4366-afa6-07014004d0a8",
+        "nome": "Resolver App Bradesco",
+        "feito": false,
+        "subtarefas": []
+      },
+      {
+        "id": "3ecc6faf-2880-45cb-b5ec-71d974560497",
+        "nome": "Buscar carterinha de dispensa",
+        "feito": false,
+        "subtarefas": []
+      }
+    ]
+  },
+  {
+    "data": "2026-01-27",
+    "aberto": false,
+    "tarefas": [
+      {
+        "id": "8c749e0e-e51c-4541-9548-7ccde0e6aed7",
+        "nome": "Fazer rematricula",
+        "feito": false,
+        "subtarefas": []
+      }
+    ]
+  },
+  {
+    "data": "2026-02-16",
+    "aberto": false,
+    "tarefas": [
+      {
+        "id": "063a6ef7-c59b-44dd-bd5f-bb6aee342162",
+        "nome": "Confirmar inscri\u00e7\u00e3o IBGE",
+        "feito": false,
+        "subtarefas": []
+      }
+    ]
+  },
+  {
+    "data": "2026-03-01",
+    "aberto": false,
+    "tarefas": [
+      {
+        "id": "2f681152-d7c5-48d8-aaee-cdc2885b4430",
+        "nome": "Concurso IBGE",
+        "feito": false,
+        "subtarefas": []
+      }
+    ]
+  },
+  {
+    "data": "2026-04-08",
+    "aberto": false,
+    "tarefas": [
+      {
+        "id": "4faa8764-0b1f-44f2-90fb-19383db763b0",
+        "nome": "Consulta dentista",
+        "feito": false,
+        "subtarefas": []
+      }
+    ]
+  },
+  {
+    "data": "2026-07-06",
+    "aberto": false,
+    "tarefas": [
+      {
+        "id": "587a3ec5-e5e8-49d6-87e5-cc1c385ea803",
+        "nome": "Contatar professora luzilei",
+        "feito": false,
+        "subtarefas": []
+      }
+    ]
+  },
+  {
+    "data": "2026-07-21",
+    "aberto": false,
+    "tarefas": [
+      {
+        "id": "b55359a0-908d-4f2a-a5fe-b2becda152d4",
+        "nome": "Fazer Rematr\u00edcula",
         "feito": false,
         "subtarefas": []
       }
