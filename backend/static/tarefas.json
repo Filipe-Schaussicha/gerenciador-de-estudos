@@ -61,5 +61,11 @@
     "nome": "Resolver adi\u00e7\u00e3o de subtarefas",
     "feito": false,
     "subtarefas": []
+  },
+  {
+    "id": "4e6533b1-6914-4438-a1c3-542e231afeea",
+    "nome": "a",
+    "feito": false,
+    "subtarefas": []
   }
 ]

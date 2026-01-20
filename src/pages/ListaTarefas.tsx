@@ -89,6 +89,7 @@ const ListaTarefas = (props: Props) => {
                         feito={tarefa['feito']}
                         isComeco={i == 0}
                         isFim={i + 1 == tarefas.length}
+                        isTitulo={true}
                         >{tarefa['nome']}
                     </Tarefas>
                 </div>

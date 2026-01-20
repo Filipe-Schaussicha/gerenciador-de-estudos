@@ -9,7 +9,8 @@ interface Props{
     subtarefas: []
     onChange: ()=> void,
     isComeco: boolean,
-    isFim: boolean
+    isFim: boolean,
+    isTitulo: boolean
 }
 
 function Tarefas(props: Props){
@@ -45,17 +46,17 @@ function Tarefas(props: Props){
     const [feito, setFeito] = useState(props.feito)
 
     return (<>
-    <div className="flex flex-col mt-1 ml-7">
+    <div className={`flex flex-col ${!props.isTitulo ? 'ml-7 mt-1' : 'ml-3'}`}>
         {/* Adicionar menu */}
-        <div className="flex">
+        <div className="flex items-center">
             <Menu menuButton={<div className="mr-3"><i className="fa-solid fa-bars"></i></div>}>
                 {!props.isComeco && <MenuItem onClick={()=>mover_tarefas(-1)}><i className="fa-solid fa-angle-up"></i> Subir</MenuItem>}
                 {!props.isFim && <MenuItem onClick={()=>mover_tarefas(1)}><i className="fa-solid fa-angle-down"></i> Descer</MenuItem>}
                 <MenuItem onClick={deletar_tarefa}><i className="fa-solid fa-trash"></i> Deletar</MenuItem>
             </Menu>
             {/*<button className="mr-3"><i className="fa-solid fa-bars"></i></button>*/}
-            <input type="checkbox" checked={feito} className="mr-3" onChange={()=>{marcar_tarefa_como_feita(!feito)}} />
-            <p className={`text-left ${feito && 'line-through'}`}>{props.children}</p>
+            <input type="checkbox" checked={feito} className={'mr-3'} onChange={()=>{marcar_tarefa_como_feita(!feito)}} />
+            <p className={`text-left ${feito && 'line-through'} ${props.isTitulo && 'text-xl font-semibold'}`}>{props.children}</p>
         </div>
         {props.subtarefas.map((tarefa, i) => (
             <Tarefas 
@@ -66,6 +67,7 @@ function Tarefas(props: Props){
                 feito={tarefa['feito']}
                 isComeco={i == 0}
                 isFim={i + 1 == props.subtarefas.length}
+                isTitulo={false}
                 >{tarefa['nome']}
             </Tarefas>
         ))}

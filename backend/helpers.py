@@ -36,12 +36,12 @@ def achar_tarefa(tarefas: list, id_tarefa: str):
 def contatenar_arvore_tarefas(tarefas: list, texto=''):
     arr = []
 
-    for tarefa in tarefas:
+    for i, tarefa in enumerate(tarefas):
         if texto == '':
-            novo_texto = tarefa['nome']
+            novo_texto = f"{str(i+1)} {tarefa['nome']}"
         else:
-            novo_texto = f"{texto}{tarefa['nome']}"
+            novo_texto = f"{texto}{str(i+1)} {tarefa['nome']}"
         arr.append({'texto': novo_texto, 'id': tarefa['id']})
-        arr = arr + contatenar_arvore_tarefas(tarefa.get('subtarefas', []), texto=texto + '-')
+        arr = arr + contatenar_arvore_tarefas(tarefa.get('subtarefas', []), texto=texto + str(i + 1) + '.')
     
     return arr
