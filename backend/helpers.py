@@ -2,13 +2,6 @@ import json
 from flask import session, jsonify
 from functools import wraps
 
-def is_data_list(lista, data):
-    for tarefa in lista:
-        if tarefa['data'] == data:
-            return True
-        
-    return False
-
 def ler_json(caminho='tarefas'):
     with open(f'static/{caminho}.json', 'r') as tasks:
         dados = json.load(tasks)
@@ -25,21 +18,6 @@ def login_required(fn):
             return jsonify({"error": "unauthorized"}), 401
         return fn(*args, **kwargs)
     return wrapper
-
-def get_index_data(dados, data):
-    for i, dia in enumerate(dados):
-        if dia['data'] == data:
-            return i
-
-    return -1
-
-def achar_tarefa_data(dados: list, id_tarefa: str):
-    for data in dados:
-        tarefa, tarefas_pai, i = achar_tarefa(data['tarefas'], id_tarefa)
-        if tarefa != None:
-            return tarefa, tarefas_pai, i
-        
-    return None, None, None
 
 def achar_tarefa(tarefas: list, id_tarefa: str):
     """

@@ -7,7 +7,6 @@ interface Props{
     feito: boolean,
     id: string,
     subtarefas: []
-    tipoPai: string,
     onChange: ()=> void,
     isComeco: boolean,
     isFim: boolean
@@ -17,7 +16,7 @@ function Tarefas(props: Props){
 
     // Marca tarefas
     function marcar_tarefa_como_feita(valor: boolean){
-        fetch(`${enderecoBack}/checkar_tarefa?tipo=${props.tipoPai}&id_tarefa=${props.id}&valor=${valor}`, {credentials:'include'}).then(
+        fetch(`${enderecoBack}/checkar_tarefa?id_tarefa=${props.id}&valor=${valor}`, {credentials:'include'}).then(
             res => {
                 if(res.ok){
                     setFeito(valor);
@@ -31,14 +30,14 @@ function Tarefas(props: Props){
     
     // Deleta tarefas
     function deletar_tarefa(){
-        fetch(`${enderecoBack}/deletar_tarefa?arquivo=${props.tipoPai}&id=${props.id}`, {credentials: 'include'}).then(
+        fetch(`${enderecoBack}/deletar_tarefa?id=${props.id}`, {credentials: 'include'}).then(
             res=> res.ok ? props.onChange() : alert("Não foi possível deletar essa tarefa")
         ).catch(e=> alert(`Erro: ${e}`))
     }
 
     // Move tarefas
     function mover_tarefas(pos: number){
-        fetch(`${enderecoBack}/mover_tarefa?arquivo=${props.tipoPai}&id=${props.id}&nova_pos=${pos}`, {credentials: 'include'}).then(
+        fetch(`${enderecoBack}/mover_tarefa?id=${props.id}&nova_pos=${pos}`, {credentials: 'include'}).then(
             res => res.ok ? props.onChange() : alert("Não foi possível mover essa tarefa")
         ).catch(e=> alert(`Erro: ${e}`))
     }
@@ -61,7 +60,6 @@ function Tarefas(props: Props){
         {props.subtarefas.map((tarefa, i) => (
             <Tarefas 
                 onChange={props.onChange} 
-                tipoPai="tarefas" 
                 key={tarefa['id']} 
                 id={tarefa['id']} 
                 subtarefas={tarefa['subtarefas']} 

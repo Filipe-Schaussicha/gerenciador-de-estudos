@@ -1,6 +1,6 @@
 from flask import Flask, session, request
 from flask_session import Session
-from helpers import is_data_list, ler_json, salvar_json, login_required, get_index_data, achar_tarefa_data, contatenar_arvore_tarefas
+from helpers import ler_json, salvar_json, login_required, contatenar_arvore_tarefas, achar_tarefa
 from flask_cors import CORS
 import json
 import uuid
@@ -16,15 +16,14 @@ usuarios = [
   {'id': 1, 'user': 'filipe', 'senha': 'filipe378'}
 ]
 
-@app.route('/add_subtarefa')
-def add_subtarefa():
+@app.route('/add_tarefa')
+def add_tarefa():
   if "user_id" not in session:
     return json.dumps({"ok": False}), 401
-  if not request.args.get('id') or not request.args.get('texto'):
+  if not request.args.get('texto'):
     return 'erro', 400
   
   dados = ler_json()
-  tarefa, _, _ = achar_tarefa_data(dados, request.args.get('id'))
 
   nova_tarefa = {
     "id": str(uuid.uuid4()),
@@ -33,32 +32,33 @@ def add_subtarefa():
     "subtarefas": []
   }
 
-  tarefa['subtarefas'].append(nova_tarefa)
+  if request.args.get('id'):
+    tarefa, _, _ = achar_tarefa(dados, request.args.get('id'))
+    tarefa['subtarefas'].append(nova_tarefa)
+  else:
+    dados.append(nova_tarefa)
 
   salvar_json(dados)
   return 'sucess', 200
 
-@app.route('/todas_tarefas_data')
+@app.route('/todas_tarefas_arvore')
 def todas_tarefas_data():
   if "user_id" not in session:
     return json.dumps({"ok": False}), 401
-  if not request.args.get('data'):
-    return 'erro', 400
   
   dados = ler_json()
-  data = request.args.get('data')
 
-  return json.dumps(contatenar_arvore_tarefas(dados[get_index_data(dados, data)]['tarefas']))
+  return json.dumps(contatenar_arvore_tarefas(dados))
 
 @app.route('/mover_tarefa')
 def mover_tarefa():
   if "user_id" not in session:
     return json.dumps({"ok": False}), 401
-  if not request.args.get('id') or not request.args.get('arquivo') or not request.args.get('nova_pos'):
+  if not request.args.get('id') or not request.args.get('nova_pos'):
     return 'erro', 400
   
-  dados = ler_json(caminho=request.args.get('arquivo'))
-  _, tarefas, i = achar_tarefa_data(dados, request.args.get('id'))
+  dados = ler_json()
+  _, tarefas, i = achar_tarefa(dados, request.args.get('id'))
   new_i = int(request.args.get('nova_pos')) + i
 
   if tarefas == None or new_i < 0 or new_i >= len(tarefas):
@@ -66,7 +66,7 @@ def mover_tarefa():
   
   tarefas[i], tarefas[new_i] = tarefas[new_i], tarefas[i]
 
-  salvar_json(dados, caminho=request.args.get('arquivo'))  
+  salvar_json(dados)  
   return 'sucess', 200
 
 @app.route('/deletar_tarefa')
@@ -74,150 +74,43 @@ def deletar_tarefa_route():
   """ Deleta tarefas """
   if "user_id" not in session:
     return json.dumps({"ok": False}), 401
-  if not request.args.get('id') or not request.args.get('arquivo'):
+  if not request.args.get('id'):
     return 'erro', 400
   
-  dados = ler_json(caminho=request.args.get('arquivo'))
+  dados = ler_json()
 
-  _, tarefas, i = achar_tarefa_data(dados, request.args.get('id'))
+  _, tarefas, i = achar_tarefa(dados, request.args.get('id'))
 
   if tarefas == None:
     return 'erro', 400
   
   tarefas.pop(i)
 
-  salvar_json(dados, caminho=request.args.get('arquivo'))  
+  salvar_json(dados)  
   return 'sucess', 200
-
 
 @app.route('/checkar_tarefa')
 def checar_tarefa():
   """ Salva se uma tarefa foi checada ou não """
   if "user_id" not in session:
     return json.dumps({"ok": False}), 401
-  
-  if not request.args.get('tipo') or not request.args.get('id_tarefa') or not request.args.get('valor'):
+  if not request.args.get('id_tarefa') or not request.args.get('valor'):
     return 'erro', 400
   
-  tipo = request.args.get('tipo')
   id = request.args.get('id_tarefa')
   valor =  True if request.args.get('valor') == 'true' else False
 
-  dados = ler_json(caminho=tipo)
+  dados = ler_json()
 
-  tarefa, _, _ = achar_tarefa_data(dados, id)
+  tarefa, _, _ = achar_tarefa(dados, id)
   if tarefa == None:
     return 'erro', 400
 
   tarefa['feito'] = valor
   
-  salvar_json(dados, caminho=tipo)
-
-  return 'sucess', 200
-
-@app.route('/add_tarefa')
-def add_tarefa():
-  """ adiciona tarefa ao arquivo .json """
-  if "user_id" not in session:
-    return json.dumps({"ok": False}), 401
-  
-  if not request.args.get('data') or not request.args.get('texto'):
-    return 'erro', 400
-  
-  dados = ler_json()
-  
-  data = request.args.get('data')
-  texto = request.args.get('texto')
-
-  nova_tarefa = {
-    "id": str(uuid.uuid4()),
-    "nome": texto,
-    "feito": False,
-    "subtarefas": []
-  }
-
-  dados[get_index_data(dados, data)]["tarefas"].append(nova_tarefa)
-
-  if dados:
-    salvar_json(dados)
-    return 'sucess', 200
-  else:
-    return 'erro', 400 
-
-@app.route('/remover_data')
-def remover_data():
-  """ Remove datas """
-  if "user_id" not in session:
-    return json.dumps({"ok": False}), 401
-
-  if not request.args.get('data'):
-    return json.dumps({"ok": False}), 400
-  
-  dados = ler_json()
-
-  data_remover = request.args.get('data')
-  novos_dados = [data for data in dados if data['data'] != data_remover]
-
-  salvar_json(novos_dados)
-
-  return json.dumps({"ok": True})
-
-@app.route('/abrir_data')
-def abrir_data():
-  """Salva se uma data teve as tarefas mostradas ou não"""
-
-  if "user_id" not in session:
-    return json.dumps({"ok": False}), 401
-  
-  if not request.args.get('data') or not request.args.get('valor'):
-    return 'erro', 400
-  
-  dados = ler_json()
-
-  data = request.args.get('data')
-  valor =  True if request.args.get('valor') == 'true' else False
-
-  dados[get_index_data(dados, data)]['aberto'] = valor
-
   salvar_json(dados)
 
   return 'sucess', 200
-
-@app.route('/add_data')
-def add_data():
-  if "user_id" not in session:
-    return json.dumps({"ok": False}), 401
-
-  # verifica se há um arg 'data'
-  if not request.args.get('data'):
-    return json.dumps({"ok": False}), 400
-
-  # lê arquivo json
-  dados = ler_json()
-
-  # cria nova data
-  nova_data = {
-    "data": request.args.get('data'),
-    "aberto": False,
-    "tarefas": []
-  }
-  
-  # verfica se a data é repetida
-  if is_data_list(dados, request.args.get('data')):
-    return json.dumps({"ok": True}), 200
-
-  # Adiciona nova data
-  dados.append(nova_data)
-
-  # Ordena as datas
-  for i in range(len(dados)):
-    for j in range(i+1, len(dados)):
-      if dados[i]['data'] > dados[j]['data']:
-        dados[i], dados[j] = dados[j], dados[i]
-
-  salvar_json(dados)
-
-  return json.dumps({"ok": True}), 200
 
 @app.route('/ler_tarefas')
 @login_required
@@ -258,5 +151,27 @@ def logout():
   session.clear()
   redirect('/login')
 
+"""
+@app.route('/abrir_data')
+def abrir_data():
+  #Salva se uma data teve as tarefas mostradas ou não
+
+  if "user_id" not in session:
+    return json.dumps({"ok": False}), 401
+  
+  if not request.args.get('data') or not request.args.get('valor'):
+    return 'erro', 400
+  
+  dados = ler_json()
+
+  data = request.args.get('data')
+  valor =  True if request.args.get('valor') == 'true' else False
+
+  dados[get_index_data(dados, data)]['aberto'] = valor
+
+  salvar_json(dados)
+
+  return 'sucess', 200
+"""
 
 #app.run(host="localhost", port=5000, debug=True)
