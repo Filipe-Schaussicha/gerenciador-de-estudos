@@ -51,7 +51,7 @@ const ListaTarefas = (props: Props) => {
 
         {/* Menu para adicionar datas */}
         {menuAddData ? 
-            <div className="bg-orange-100 mt-3 rounded-xl p-3 flex flex-col" id="add_tarefa" >
+            <div className="bg-orange-100 mt-3 rounded-xl p-3 flex flex-col" >
                 <button onClick={() => {setMenuAddData(false); setLogAddData(-1)}} className="ml-auto"><i className="fa-solid fa-x"></i></button>
                 <form onSubmit={add_tarefa}/* Programar onSubmit */>
                     <input value={dataInput} onChange={(e)=>setDataImput(e.target.value)} type="date" name="data" id="data" className="bg-white mb-2 max-w-full rounded-xl p-2 mx-auto" required />
@@ -61,8 +61,8 @@ const ListaTarefas = (props: Props) => {
                 </form>
             </div>
             :
-            <div className="bg-orange-100 mt-3 rounded-xl">
-                <button className="hover:bg-orange-200 px-3 py-1 rounded-xl font-medium block w-full"
+            <div className="bg-orange-200 mt-3 rounded-xl">
+                <button className="hover:bg-orange-300 px-3 py-1 rounded-xl font-medium block w-full"
                 onClick={() => {setMenuAddData(true); setLogAddData(-1)}}><i className="fa-solid fa-plus"></i> Adicionar Data</button>
             </div> 
         }

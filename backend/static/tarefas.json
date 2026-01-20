@@ -33,7 +33,32 @@
         "id": "91fdaa62-8db3-4b63-881e-678c165c9508",
         "nome": "Adicionar pomodoro timer",
         "feito": false,
-        "subtarefas": []
+        "subtarefas": [
+          {
+            "id": "6e0c46cd-3019-400c-b7c8-4c17d768f100",
+            "nome": "Criar desing",
+            "feito": true,
+            "subtarefas": []
+          },
+          {
+            "id": "d4ee3d29-10fb-4cdc-91cc-5ba1083c373c",
+            "nome": "Salvar dados",
+            "feito": false,
+            "subtarefas": []
+          },
+          {
+            "id": "0fad1b6b-27e7-44cc-b085-a7e6cf0626ee",
+            "nome": "Escrever hook de audio",
+            "feito": true,
+            "subtarefas": []
+          },
+          {
+            "id": "3f6659fd-0dc5-41fb-8284-7c4bdb960b23",
+            "nome": "Adicionar notifica\u00e7\u00f5es",
+            "feito": true,
+            "subtarefas": []
+          }
+        ]
       },
       {
         "id": "6d785856-a466-475f-987f-aceabfc371c9",

@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react"
+import useSound from "use-sound"
+import alerta from "./alerta.mp3"
 
 interface Props{
   className: string
@@ -16,6 +18,9 @@ const Pomodoro = (props: Props) => {
   const [tipoTimer, setTipoTimer] = useState(0)
   const [timeMinuts, setTimeMinuts] = useState(25)
   const [ciclo, setCiclo] = useState(1)
+  const [pulado, setPulado] = useState(false)
+
+  const [play, {stop}] = useSound(alerta, {volume: 0.5});
 
   // Diminui um segundo por segundo
   useEffect(()=>{
@@ -44,6 +49,22 @@ const Pomodoro = (props: Props) => {
       setTipoTimer(0)
       setTimeMinuts(25)
     }
+
+    // Tocar aviso
+    if(!pulado){
+      let texto = ''
+      if(tipoTimer != 0){
+        texto = 'Volte ao trabalho!'
+      }else{
+        texto = 'Descanse um pouco'
+      }
+
+      play()
+      alert(texto)
+      stop()
+    }else{
+      setPulado(false)
+    }
   }
 
   // Adiciona um zero a esquerda se necessário
@@ -63,7 +84,7 @@ const Pomodoro = (props: Props) => {
       <h2 className="text-4xl font-medium">Pomodoro</h2>
 
       <div className="bg-orange-200 mt-3 rounded-xl">
-        <button className="hover:bg-orange-300 px-3 py-1 rounded-xl font-medium block w-full">
+        <button onClick={() =>play()} className="hover:bg-orange-300 px-3 py-1 rounded-xl font-medium block w-full">
         <i className="fa-solid fa-chart-column"></i> Mostar Estatísticas</button>
       </div> 
 
@@ -75,7 +96,7 @@ const Pomodoro = (props: Props) => {
         <div className="flex justify-center text-2xl mt-5">
           <button className={`p-2 ${hoverColor} rounded-xl`} onClick={() => {setTimeSeconds(0); setTimeMinuts(tempo[tipoTimer])}}><i className="fa-solid fa-arrow-rotate-right"></i></button>
           <button className={`font-semibold mx-3 p-2 ${hoverColor} rounded-xl`} onClick={()=>setTimerAtivo(!timerAtivo)}>{timerAtivo ? 'Pause' : 'Start'}</button>
-          <button onClick={()=>{setTimeMinuts(-1); setTimeSeconds(0)}} className={`p-2 ${hoverColor} rounded-xl`}><i className="fa-solid fa-forward-step"></i></button>
+          <button onClick={()=>{setTimeMinuts(-1); setTimeSeconds(0); setPulado(true)}} className={`p-2 ${hoverColor} rounded-xl`}><i className="fa-solid fa-forward-step"></i></button>
         </div>
 
       </div>
