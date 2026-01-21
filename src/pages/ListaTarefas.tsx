@@ -15,7 +15,6 @@ const ListaTarefas = (props: Props) => {
     const [tarefasCarregadas, setTarefasCarregadas] = useState(0);
     const [tarefas, setTarefas] = useState([]);
     const [textoInput, setTextoInput] = useState('')
-    const [addSubtarefa, setAddSubtarefa] = useState(false)
     const [listaSubtarefasMenu, setListaSubtarefasMenu] = useState([])
     const [recarregarListaSubtarefasMenu, setRecarregarListaSubtarefasMenu] = useState(false);
 
@@ -25,7 +24,7 @@ const ListaTarefas = (props: Props) => {
     ).catch(()=>setTarefasCarregadas(-1)).finally(()=>setRecarregar(false))}, [recarregar])
 
     useEffect(() => {fetch(`${enderecoBack}/todas_tarefas_arvore`, {credentials: 'include'}).then( res=>
-        res.json(). then(json => {setListaSubtarefasMenu(json); console.log(json)})
+        res.json(). then(json => {setListaSubtarefasMenu(json);})
     ).catch((e) => console.error(e)).finally(()=>setRecarregarListaSubtarefasMenu(false))}, [recarregarListaSubtarefasMenu])
 
     return (
@@ -43,25 +42,18 @@ const ListaTarefas = (props: Props) => {
                 onClick={() => {setMenuAddData(false);}}><i className="fa-solid fa-x"></i> Fechar Menu</button>
             </div> 
         
-            <form className="my-3 bg-orange-100 rounded-xl py-3"
-             onSubmit={(e)=>{add_tarefa(e, addSubtarefa); setRecarregar(true); setRecarregarListaSubtarefasMenu(true); setTextoInput('')}}>
+            <form className="my-3 bg-orange-100 rounded-xl py-3 px-1.5"
+             onSubmit={(e)=>{add_tarefa(e); setRecarregar(true); setRecarregarListaSubtarefasMenu(true); setTextoInput('')}}>
 
-                <label htmlFor="toggleSubtarefa">Adicionar Subtarefa: </label>
-                <input name="toggleSubtarefa" className="mr-1.5 text-xl" type="checkbox" onClick={()=>{
-                    setAddSubtarefa(!addSubtarefa); setRecarregarListaSubtarefasMenu(true);
-                }} checked={addSubtarefa} />
+                <select className={`bg-white p-1 my-1.5 rounded-xl max-w-full`} name="id" defaultValue={''}>
+                    <option value="" key={'0'}>Novo Projeto</option>
 
-                <br />
-                <select className={`${addSubtarefa ? 'bg-white' : 'bg-gray-50'} p-1 my-1.5 rounded-xl`} name="id" disabled={!addSubtarefa} required={addSubtarefa}>
-                    <option selected disabled value="">Selecione uma tarefa</option>
-                    {addSubtarefa &&
-                        listaSubtarefasMenu.map(item => (
-                            <option value={item['id']}>{item['texto']}</option>
-                        ))
-                    }
+                    {listaSubtarefasMenu.map(item => (
+                        <option value={item['id']} key={item['id']}>{item['texto']}</option>
+                    ))}
                 </select>
                 <input name="texto" value={textoInput} onChange={(e)=>setTextoInput(e.currentTarget.value)} 
-                className="bg-white mb-2 max-w-full rounded-xl p-2 block mx-auto" autoComplete="off" />
+                className="bg-white mb-2 w-80 max-w-full rounded-xl p-2 block mx-auto" autoComplete="off" />
 
                 <button type="submit" className="bg-green-400 hover:bg-green-500 px-3 py-1 rounded-xl font-medium block mx-auto">
                     Adicionar Tarefa
@@ -80,7 +72,7 @@ const ListaTarefas = (props: Props) => {
             {tarefasCarregadas == 0 && <p>Carregando Tarefas</p>}
             {tarefasCarregadas == -1 && <p>Erro ao carregar tarefas</p>}
             {tarefasCarregadas == 1 && tarefas.map((tarefa, i)=>(
-                <div className="bg-orange-100 mt-3 rounded-xl py-3">
+                <div key={tarefa['id']} className="bg-orange-100 mt-3 rounded-xl py-3">
                     <Tarefas 
                         onChange={()=>{setRecarregar(true); setRecarregarListaSubtarefasMenu(true)}} 
                         key={tarefa['id']} 
@@ -99,14 +91,15 @@ const ListaTarefas = (props: Props) => {
   )
 }
 
-function add_tarefa(e: FormEvent<HTMLFormElement>, addSubtarefa: boolean){
+function add_tarefa(e: FormEvent<HTMLFormElement>){
     e.preventDefault()
 
     const form = new FormData(e.currentTarget);
 
     const texto = form.get('texto') as string;
+    const id = form.get('id') as string;
     let url = '';
-    if(addSubtarefa){
+    if(id != ''){
         const id = form.get('id') as string;
 
         url = `${enderecoBack}/add_tarefa?texto=${texto}&id=${id}`
