@@ -1,24 +1,93 @@
 [
   {
-    "id": "3eb46814-78aa-4399-88d1-6a695bec16c4",
-    "nome": "Adicionar sistema de subtarefas",
-    "feito": true,
+    "id": "1e76fd9b-011b-4b78-98fa-aaf656706584",
+    "nome": "Gerenciador de estudos",
+    "feito": false,
+    "aberto": true,
     "subtarefas": [
       {
-        "id": "04320a84-6650-4054-862c-9d98d6f4a650",
-        "nome": "Adicionado!",
-        "feito": true,
-        "subtarefas": []
-      },
-      {
-        "id": "1",
-        "nome": "Poder adicionar novas subtarefas",
-        "feito": true,
+        "id": "2c13c576-0700-466f-b689-858692574bf4",
+        "nome": "Lista Tarefas",
+        "feito": false,
+        "aberto": true,
         "subtarefas": [
           {
-            "id": "2",
-            "nome": "Mais uma subtarefa",
+            "id": "839b394f-b6ce-4535-a5aa-cba977f87eff",
+            "nome": "Esconder tarefas",
             "feito": true,
+            "aberto": true,
+            "subtarefas": []
+          },
+          {
+            "id": "1bf022f8-6387-42c7-b8d4-f4a252e3cc1e",
+            "nome": "Cores de fundo diferentes",
+            "feito": false,
+            "aberto": true,
+            "subtarefas": []
+          }
+        ]
+      },
+      {
+        "id": "f51109ac-e19e-484c-b056-3d86ae574e68",
+        "nome": "Pomodoro timer",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": [
+          {
+            "id": "fcb0a79f-8946-46cd-ade4-2bb17a678433",
+            "nome": "Criar banco hist\u00f3rico",
+            "feito": false,
+            "aberto": true,
+            "subtarefas": []
+          },
+          {
+            "id": "ed99d95e-2596-40c2-9172-f5dec8c8d474",
+            "nome": "Enviar informa\u00e7\u00f5es",
+            "feito": false,
+            "aberto": true,
+            "subtarefas": []
+          },
+          {
+            "id": "9950c8ae-3144-4240-a1a9-644e52909958",
+            "nome": "Criar aba hist\u00f3rico",
+            "feito": false,
+            "aberto": true,
+            "subtarefas": []
+          }
+        ]
+      },
+      {
+        "id": "f6b2963b-092a-4ec2-9572-a4925c6f84ee",
+        "nome": "Ciclo de estudos",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": [
+          {
+            "id": "34c6e916-b20b-4132-b1e3-8f9688f1b47c",
+            "nome": "Criar banco",
+            "feito": false,
+            "aberto": true,
+            "subtarefas": []
+          },
+          {
+            "id": "e7934096-afe9-466b-9137-ba399353ea00",
+            "nome": "Criar API",
+            "feito": false,
+            "aberto": true,
+            "subtarefas": []
+          },
+          {
+            "id": "29e11f1f-e1e3-4608-9a3a-f586a70cec59",
+            "nome": "Criar display de ciclos",
+            "feito": false,
+            "aberto": true,
+            "subtarefas": []
+          },
+          {
+            "id": "d72a13e1-d3e7-409f-936f-d5942609726b",
+            "nome": "Criar editor",
+            "feito": false,
+            "aberto": true,
             "subtarefas": []
           }
         ]
@@ -26,46 +95,132 @@
     ]
   },
   {
-    "id": "91fdaa62-8db3-4b63-881e-678c165c9508",
-    "nome": "Adicionar pomodoro timer",
+    "id": "557caba1-c3ba-4458-8a42-2e4d20e01212",
+    "nome": "Curso Dam\u00e1sio",
     "feito": false,
+    "aberto": false,
     "subtarefas": [
       {
-        "id": "6e0c46cd-3019-400c-b7c8-4c17d768f100",
-        "nome": "Criar desing",
-        "feito": true,
-        "subtarefas": []
-      },
-      {
-        "id": "d4ee3d29-10fb-4cdc-91cc-5ba1083c373c",
-        "nome": "Salvar dados",
+        "id": "04ecd0b4-5001-4dfa-b447-872884a8ab61",
+        "nome": "Evangelismo",
         "feito": false,
+        "aberto": true,
         "subtarefas": []
       },
       {
-        "id": "0fad1b6b-27e7-44cc-b085-a7e6cf0626ee",
-        "nome": "Escrever hook de audio",
-        "feito": true,
+        "id": "1c48a55c-61a2-455b-b025-111d1245ea00",
+        "nome": "Missiologia",
+        "feito": false,
+        "aberto": true,
         "subtarefas": []
       },
       {
-        "id": "3f6659fd-0dc5-41fb-8284-7c4bdb960b23",
-        "nome": "Adicionar notifica\u00e7\u00f5es",
-        "feito": true,
+        "id": "5da51808-5c60-44db-b159-12dd239e5bea",
+        "nome": "Bibliologia",
+        "feito": false,
+        "aberto": true,
         "subtarefas": []
       }
     ]
   },
   {
-    "id": "0aa32cf3-3b50-4897-94b9-f325c5cd12bc",
-    "nome": "Resolver adi\u00e7\u00e3o de subtarefas",
-    "feito": true,
-    "subtarefas": []
+    "id": "1587d708-2b1a-4473-a021-c0ba595daf30",
+    "nome": "Arrumar aparelhos",
+    "feito": false,
+    "aberto": true,
+    "subtarefas": [
+      {
+        "id": "37325d74-7be5-47a3-9c00-7e946a5c7d00",
+        "nome": "TV",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      },
+      {
+        "id": "fc2a63bf-2b2a-40fc-8977-899ddc6fc199",
+        "nome": "C\u00e2meras",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      },
+      {
+        "id": "db2bfed7-ee99-4c75-8803-fa34a227b875",
+        "nome": "App Sumup",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      },
+      {
+        "id": "fddab9a8-4b47-4a9b-9b51-2e70d349a7d3",
+        "nome": "Impressora",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      },
+      {
+        "id": "70b08b80-0f3d-4fe1-95d8-ae638a61358d",
+        "nome": "Notbook",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      },
+      {
+        "id": "ea234ce3-a987-426f-ae2f-5c6691c2a3da",
+        "nome": "R\u00e1dios",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      },
+      {
+        "id": "35e5582e-ac28-4979-a31d-658edef5fb2b",
+        "nome": "Microfone",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      }
+    ]
   },
   {
-    "id": "ead19687-c711-47ed-84ce-5275f92db20e",
-    "nome": "a",
+    "id": "8c1048d1-fe6b-41ac-820c-66e16d8a186c",
+    "nome": "Site com React",
     "feito": false,
+    "aberto": true,
+    "subtarefas": [
+      {
+        "id": "4fa6f8b3-b3a1-4772-8565-fb3bc7cda988",
+        "nome": "Jogo de encontrar versos Holyrics",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      },
+      {
+        "id": "b00af59a-2ce6-4ff3-9a7f-305818fe6682",
+        "nome": "Portif\u00f3lio de display de projetos programa\u00e7\u00e3o / tradu\u00e7\u00f5es",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      },
+      {
+        "id": "ee6799dd-e60d-4cdd-ab48-3e0a736f55f7",
+        "nome": "Site not\u00edcias com World News API",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      },
+      {
+        "id": "3ca6b928-b41e-4355-8281-734a2d9ea8ed",
+        "nome": "Testar Bored API",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      }
+    ]
+  },
+  {
+    "id": "6043f5ca-ac08-4bab-8f0d-7a4f52538809",
+    "nome": "Fazer um player de m\u00fasica port\u00e1til em uma carca\u00e7a de fita k7",
+    "feito": false,
+    "aberto": true,
     "subtarefas": []
   }
 ]
