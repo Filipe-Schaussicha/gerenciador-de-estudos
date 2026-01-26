@@ -10,7 +10,8 @@ interface Props{
     onChange: ()=> void,
     isComeco: boolean,
     isFim: boolean,
-    isTitulo: boolean
+    isTitulo: boolean,
+    aberto: boolean
 }
 
 function Tarefas(props: Props){
@@ -43,6 +44,12 @@ function Tarefas(props: Props){
         ).catch(e=> alert(`Erro: ${e}`))
     }
 
+    function setar_tarefa_aberta(){
+        fetch(`${enderecoBack}/setar_tarefa_aberta?id=${props.id}&valor=${!props.aberto}`, {credentials: 'include'}).then(
+            res => res.ok ? props.onChange() : alert("Não foi possível abrir / fechar as subtarefas")
+        ).catch(e=> alert(`Erro: ${e}`))
+    }
+
     const [feito, setFeito] = useState(props.feito)
 
     return (<>
@@ -52,13 +59,22 @@ function Tarefas(props: Props){
             <Menu menuButton={<div className="mr-3"><i className="fa-solid fa-bars"></i></div>}>
                 {!props.isComeco && <MenuItem onClick={()=>mover_tarefas(-1)}><i className="fa-solid fa-angle-up"></i> Subir</MenuItem>}
                 {!props.isFim && <MenuItem onClick={()=>mover_tarefas(1)}><i className="fa-solid fa-angle-down"></i> Descer</MenuItem>}
+                {props.subtarefas.length > 0 && <MenuItem onClick={setar_tarefa_aberta}>
+                    {props.aberto ?
+                    <><i className="fa-solid fa-eye-slash"></i> Esconder</>
+                    :
+                    <><i className="fa-solid fa-eye"></i> Mostar Subtarefas</>
+                    }       
+                </MenuItem>}
                 <MenuItem onClick={deletar_tarefa}><i className="fa-solid fa-trash"></i> Deletar</MenuItem>
             </Menu>
             {/*<button className="mr-3"><i className="fa-solid fa-bars"></i></button>*/}
             <input type="checkbox" checked={feito} className={'mr-3'} onChange={()=>{marcar_tarefa_como_feita(!feito)}} />
-            <p className={`text-left ${feito && 'line-through'} ${props.isTitulo && 'text-xl font-semibold'}`}>{props.children}</p>
+            <p className={`text-left ${feito && 'line-through'} ${props.isTitulo && 'text-xl font-semibold'} ${!props.aberto && props.subtarefas.length > 0 && 'underline'}`}>
+                {props.children}
+            </p>
         </div>
-        {props.subtarefas.map((tarefa, i) => (
+        {props.aberto && props.subtarefas.map((tarefa, i) => (
             <Tarefas 
                 onChange={props.onChange} 
                 key={tarefa['id']} 
@@ -68,6 +84,7 @@ function Tarefas(props: Props){
                 isComeco={i == 0}
                 isFim={i + 1 == props.subtarefas.length}
                 isTitulo={false}
+                aberto={tarefa['aberto']}
                 >{tarefa['nome']}
             </Tarefas>
         ))}

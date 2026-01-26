@@ -1,9 +1,10 @@
 from flask import Flask, session, request
 from flask_session import Session
-from helpers import ler_json, salvar_json, login_required, contatenar_arvore_tarefas, achar_tarefa
+from helpers import ler_json, salvar_json, login_required, contatenar_arvore_tarefas, achar_tarefa, ler_bd
 from flask_cors import CORS
 import json
 import uuid
+import sqlite3 as sql
 
 app = Flask(__name__)
 
@@ -15,6 +16,79 @@ CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 usuarios = [
   {'id': 1, 'user': 'filipe', 'senha': 'filipe378'}
 ]
+
+DB_PATH = "static/banco.db"
+
+@app.route('/reseta_ciclo')
+def reseta_ciclo():
+    if "user_id" not in session:
+        return 'erro', 401
+
+    con = sql.connect(DB_PATH)
+    cur = con.cursor()
+    cur.execute("UPDATE disciplinas SET h_estudadas = 0;")
+    con.commit()
+
+    return 'sucess'
+
+@app.route('/add_ciclo')
+def add_ciclo():
+    if "user_id" not in session:
+        return 'erro', 401
+    if not request.args.get("nome") or not request.args.get("horas"):
+        return 'erro', 400
+
+    con = sql.connect(DB_PATH)
+    cur = con.cursor()
+    dados = (request.args.get("nome"), request.args.get("horas"))
+    cur.execute("INSERT INTO disciplinas(nome, h_objetivo) VALUES (?, ?);", dados)
+    con.commit()
+
+    return 'sucess'
+
+@app.route('/apaga_ciclo')
+def apaga_ciclo():
+    if "user_id" not in session:
+        return 'erro', 401
+    if not request.args.get("id"):
+        return 'erro', 400
+
+    con = sql.connect(DB_PATH)
+    cur = con.cursor()
+    cur.execute("DELETE FROM disciplinas WHERE id = ?;", (request.args.get("id")))
+    con.commit()
+
+    return 'sucesso', 200
+
+@app.route('/ler_ciclo')
+def ler_ciclo():
+    if "user_id" not in session:
+        return 'erro', 401
+
+    dados = ler_bd()
+    return json.dumps(dados)
+
+@app.route('/setar_tarefa_aberta')
+def setar_tarefa_aberta():
+  if "user_id" not in session:
+    return json.dumps({"ok": False}), 401
+  if not request.args.get('id') or not request.args.get('valor'):
+    return 'erro', 400
+  
+  id = request.args.get('id')
+  valor =  True if request.args.get('valor') == 'true' else False
+
+  dados = ler_json()
+
+  tarefa, _, _ = achar_tarefa(dados, id)
+  if tarefa == None:
+    return 'erro', 400
+
+  tarefa['aberto'] = valor
+  
+  salvar_json(dados)
+
+  return 'sucess', 200
 
 @app.route('/add_tarefa')
 def add_tarefa():
@@ -29,12 +103,14 @@ def add_tarefa():
     "id": str(uuid.uuid4()),
     "nome": request.args.get('texto'),
     "feito": False,
+    "aberto": True,
     "subtarefas": []
   }
 
   if request.args.get('id'):
-    tarefa, _, _ = achar_tarefa(dados, request.args.get('id'))
+    tarefa, pai, _ = achar_tarefa(dados, request.args.get('id'))
     tarefa['subtarefas'].append(nova_tarefa)
+    #pai['aberto'] = True
   else:
     dados.append(nova_tarefa)
 

@@ -31,7 +31,7 @@
         "id": "f51109ac-e19e-484c-b056-3d86ae574e68",
         "nome": "Pomodoro timer",
         "feito": false,
-        "aberto": true,
+        "aberto": false,
         "subtarefas": [
           {
             "id": "fcb0a79f-8946-46cd-ade4-2bb17a678433",
@@ -65,16 +65,45 @@
           {
             "id": "34c6e916-b20b-4132-b1e3-8f9688f1b47c",
             "nome": "Criar banco",
-            "feito": false,
+            "feito": true,
             "aberto": true,
             "subtarefas": []
           },
           {
             "id": "e7934096-afe9-466b-9137-ba399353ea00",
             "nome": "Criar API",
-            "feito": false,
+            "feito": true,
             "aberto": true,
-            "subtarefas": []
+            "subtarefas": [
+              {
+                "id": "b735c27d-a509-4153-b862-b007df402ead",
+                "nome": "Ler ciclo",
+                "feito": true,
+                "aberto": true,
+                "subtarefas": []
+              },
+              {
+                "id": "af7cce9e-2e53-425d-a39c-5d2796f414a0",
+                "nome": "apagar disciplina",
+                "feito": true,
+                "aberto": true,
+                "subtarefas": []
+              },
+              {
+                "id": "b0adff73-0983-46b1-87b9-298823294a83",
+                "nome": "Adicionar disciplina",
+                "feito": true,
+                "aberto": true,
+                "subtarefas": []
+              },
+              {
+                "id": "1107edc1-0c21-4246-84a8-317b636532b1",
+                "nome": "Resetar ciclo",
+                "feito": true,
+                "aberto": true,
+                "subtarefas": []
+              }
+            ]
           },
           {
             "id": "29e11f1f-e1e3-4608-9a3a-f586a70cec59",
@@ -127,7 +156,7 @@
     "id": "1587d708-2b1a-4473-a021-c0ba595daf30",
     "nome": "Arrumar aparelhos",
     "feito": false,
-    "aberto": true,
+    "aberto": false,
     "subtarefas": [
       {
         "id": "37325d74-7be5-47a3-9c00-7e946a5c7d00",
@@ -184,7 +213,7 @@
     "id": "8c1048d1-fe6b-41ac-820c-66e16d8a186c",
     "nome": "Site com React",
     "feito": false,
-    "aberto": true,
+    "aberto": false,
     "subtarefas": [
       {
         "id": "4fa6f8b3-b3a1-4772-8565-fb3bc7cda988",
@@ -217,10 +246,25 @@
     ]
   },
   {
-    "id": "6043f5ca-ac08-4bab-8f0d-7a4f52538809",
-    "nome": "Fazer um player de m\u00fasica port\u00e1til em uma carca\u00e7a de fita k7",
+    "id": "60a8d0da-bef8-46f1-95b5-690385a9d3f9",
+    "nome": "Projetos Arduino",
     "feito": false,
-    "aberto": true,
-    "subtarefas": []
+    "aberto": false,
+    "subtarefas": [
+      {
+        "id": "2fb4ad5a-651a-4da3-80e9-6349a46b87d7",
+        "nome": "Fazer um player de m\u00fasica port\u00e1til em uma carca\u00e7a de fita k7",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      },
+      {
+        "id": "472eefd3-a8c4-4c8e-9049-ee3a4a874da0",
+        "nome": "Fazer tocador de m\u00fasicas para o pai",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      }
+    ]
   }
 ]

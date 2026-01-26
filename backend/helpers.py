@@ -1,6 +1,7 @@
 import json
 from flask import session, jsonify
 from functools import wraps
+import sqlite3 as sql 
 
 def ler_json(caminho='tarefas'):
     with open(f'static/{caminho}.json', 'r') as tasks:
@@ -45,3 +46,25 @@ def contatenar_arvore_tarefas(tarefas: list, texto=''):
         arr = arr + contatenar_arvore_tarefas(tarefa.get('subtarefas', []), texto=texto + str(i + 1) + '.')
     
     return arr
+
+def ler_bd():
+    con = sql.connect("static/banco.db")
+    cur = con.cursor()
+
+    res = cur.execute("SELECT * FROM disciplinas;")
+
+    dados = res.fetchall()
+
+    con.close()
+
+    final = []
+
+    for dado in dados:
+        final.append({
+            "id": dado[0],
+            "nome": dado[1],
+            "objetivo": dado[2],
+            "estudadas": dado[3]
+        })
+
+    return final
