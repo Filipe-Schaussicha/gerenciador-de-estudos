@@ -115,7 +115,7 @@
           {
             "id": "d72a13e1-d3e7-409f-936f-d5942609726b",
             "nome": "Criar editor",
-            "feito": false,
+            "feito": true,
             "aberto": true,
             "subtarefas": []
           }
