@@ -42,6 +42,12 @@ const Ciclo = (props: Props) => {
     ).catch(e=> alert(`Erro: ${e}`))
   }
 
+  function deleta_ciclo(id: number) {
+    fetch(`${enderecoBack}/apaga_ciclo?id=${id}`, {credentials: 'include'}).then(res => 
+      !res.ok ? alert('Erro ao apagar disciplina') : setUpdateValues(true)
+    ).catch(e=> alert(`Erro: ${e}`))
+  }
+
   return (
     <section className={props.className}>
       <h2 className="text-4xl font-medium">Ciclo de estudos</h2>
@@ -66,9 +72,9 @@ const Ciclo = (props: Props) => {
             <i className="fa-solid fa-plus"></i> Adicionar Disciplina</button>
             
             <div className="w-full mt-3">
-              <input type="text" name="nome" value={nomeInput} onChange={(e)=>setNomeInput(e.currentTarget.value)} required placeHolder="Disciplina" className="bg-white rounded-xl mr-1.5 p-1.5" />
+              <input type="text" name="nome" autoComplete="off" value={nomeInput} onChange={(e)=>setNomeInput(e.currentTarget.value)} required placeholder="Disciplina" className="bg-white rounded-xl mr-1.5 p-1.5" />
 
-              <input type="number" name="horas" required value={horasInput} onChange={(e)=>setHorasInput(e.currentTarget.value)} placeHolder="Horas" min="0" 
+              <input type="number" name="horas" required value={horasInput} onChange={(e)=>setHorasInput(e.currentTarget.value)} placeholder="Horas" min="0" 
               className="bg-white rounded-xl mr-1.5 p-1.5" />
             </div>
           </form>
@@ -78,12 +84,19 @@ const Ciclo = (props: Props) => {
 
       {/* Ciclo de estudos */}
       <div>
-        {values.map(item => (
-          <div key={item["id"]} className="mt-3">
-            <input name="ciclo" type="radio" value={item["id"]} />
-            <label for={item["id"]}>{item["nome"]}</label>
+        {values.map(item => {
+          const bg = item["estudadas"] == item["objetivo"] ? 'bg-blue-100' : item["estudadas"] > item["objetivo"] ? 'bg-green-100' : 'bg-red-100'
+
+           return <div key={item["id"]} 
+          className={`mt-3 flex p-3 rounded-xl w-full ${bg}`}>
+
+            <button className="mr-1.5" onClick={()=> reseta_ciclo(item["id"])}><i className="fa-solid fa-trash" /></button>
+            <input name="ciclo" type="radio" value={item["id"]} className="mr-1.5" />
+            <label htmlFor={item["id"]}>{item["nome"]}</label>
+
+            <p className="ml-auto">{item["estudadas"]}/{item["objetivo"]}</p>
           </div>
-        ))}
+        })}
       </div>
 
     </section>
