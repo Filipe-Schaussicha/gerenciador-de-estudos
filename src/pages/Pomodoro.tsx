@@ -1,7 +1,8 @@
-import { use, useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import useSound from "use-sound"
 import alerta from "../assets/alerta.mp3"
 import click_sound from "../assets/click.mp3"
+import { useCountdown } from "usehooks-ts"
 
 interface Props{
   className: string
@@ -12,82 +13,71 @@ const Pomodoro = (props: Props) => {
   // TODO: Adicionar notificações
 
   const tempo = [25, 5, 15]
-  const bgColor = ['bg-red', 'bg-blue', 'bg-green']
+  const bgColor = ['bg-red-200', 'bg-blue-200', 'bg-green-200']
 
-  const [timeSeconds, setTimeSeconds] = useState(0);
-  const [timerAtivo, setTimerAtivo] = useState(false);
+  const [timer25, timer25opt] = useCountdown({countStart: 25 * 60})
+  const [timer15, timer15opt] = useCountdown({countStart: 15 * 60})
+  const [timer5, timer5opt] = useCountdown({countStart: 5 * 60})
+
+  const [isRunning, setIsRunning] = useState(false)
   const [tipoTimer, setTipoTimer] = useState(0)
-  const [timeMinuts, setTimeMinuts] = useState(25)
   const [ciclo, setCiclo] = useState(1)
-  const [pulado, setPulado] = useState(false)
+  const pulado = useRef(false)
+  const refCiclo = useRef(1)
 
-  const [play, {stop}] = useSound(alerta, {volume: 0.5});
+  const [play_alerta, opt_alerta] = useSound(alerta, {volume: 0.5});
   const [play_click] = useSound(click_sound, {volume: 0.5});
 
-  // Reseta os segundo
-  if(timeSeconds < 0){
-    setTimeSeconds(59);
-    setTimeMinuts(timeMinuts - 1)
-  }
+  let timerAtual = timer25;
+  let timerAtualOpt = timer25opt;
+  
+  function troca_timer(){
+    if(!pulado.current){
+      let texto = tipoTimer != 0 ? 'Volte ao trabalho!' : 'Descanse um pouco'
 
-  // Reseta os minutos quando chega a 0
-  if(timeMinuts < 0){
-    if(tipoTimer == 0){
-      setCiclo(ciclo + 1)
-      if(ciclo % 4 == 0){
-        setTipoTimer(2)
-        setTimeMinuts(15)
-      }else{
-        setTipoTimer(1)
-        setTimeMinuts(5)
-      }
-    }else {
-      setTipoTimer(0)
-      setTimeMinuts(25)
-    }
-
-    setTimeSeconds(0)
-    setTimerAtivo(false)
-
-    // Tocar aviso
-    if(!pulado){
-      let texto = ''
-      if(tipoTimer != 0){
-        texto = 'Volte ao trabalho!'
-      }else{
-        texto = 'Descanse um pouco'
-      }
-
-      play()
+      play_alerta()
       alert(texto)
-      stop()
+      opt_alerta.stop()
     }else{
-      setPulado(false)
+      timerAtualOpt.resetCountdown()
+    }
+
+    pulado.current = false
+    setIsRunning(false)
+
+    if(tipoTimer == 0){
+      setTipoTimer(refCiclo.current % 4 == 0 ? 2 : 1)
+    }else{
+      refCiclo.current = refCiclo.current + 1
+      setCiclo(refCiclo.current)
+      setTipoTimer(0)
     }
   }
+
+  if(tipoTimer == 0){
+    [timerAtual, timerAtualOpt] = [timer25, timer25opt]
+  }else if(tipoTimer == 2){
+    [timerAtual, timerAtualOpt] = [timer15, timer15opt]
+  }else{
+    [timerAtual, timerAtualOpt] = [timer5, timer5opt]
+  }
+
+  useEffect(()=>{
+    document.title = isRunning ? `Timer: ${minutos}:${segundos}` : 'Gerenciador de Estudos'
+  }, [timerAtual, isRunning])
+
+  timerAtual == 0 && troca_timer();
 
   // Adiciona um zero a esquerda se necessário
-  let segundos = String(timeSeconds)
-  if (segundos.length < 2){
-    segundos = '0'+segundos;
-  }
-  let minutos = String(timeMinuts)
+  let minutos_number = Math.trunc((timerAtual / 60))
+  let minutos = String(minutos_number)
   if(minutos.length < 2){
     minutos = '0' + minutos
   }
-
-  // Diminui um segundo por segundo
-  useEffect(()=>{
-    const timer = setTimeout(() => {
-      if(timerAtivo){
-        timerAtivo && setTimeSeconds(timeSeconds-1);
-        document.title = `Timer: ${minutos}:${segundos}`
-      }else{
-        document.title = 'Gerenciador de Estudos'
-      }
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [timerAtivo, timeSeconds])
+  let segundos = String(timerAtual - minutos_number * 60)
+  if (segundos.length < 2){
+    segundos = '0'+segundos;
+  }
 
   const hoverColor = tipoTimer == 0 ? 'hover:bg-red-300' : tipoTimer == 1 ? 'hover:bg-blue-300' : 'hover:bg-green-300'
 
@@ -96,26 +86,38 @@ const Pomodoro = (props: Props) => {
       <h2 className="text-4xl font-medium">Pomodoro</h2>
 
       <div className="bg-orange-200 mt-3 rounded-xl">
-        <button onClick={() =>play()} className="hover:bg-orange-300 px-3 py-1 rounded-xl font-medium block w-full">
+        <button onClick={() =>play_alerta()} className="hover:bg-orange-300 px-3 py-1 rounded-xl font-medium block w-full">
         <i className="fa-solid fa-chart-column"></i> Mostar Estatísticas</button>
       </div> 
 
-      <div className={`${bgColor[tipoTimer]}-200 mt-3 rounded-xl px-2 py-10`}>
-        <h3 className="text-6xl font-semibold">{minutos+':'+segundos}</h3>
+      <div className={`${bgColor[tipoTimer]} mt-3 rounded-xl px-2 py-10`}>
+        <h3 className="text-6xl font-semibold">{minutos}:{segundos}</h3>
 
-        <p className="mt-5">{`Ciclo nº ${tipoTimer == 0 ? ciclo : ciclo - 1}`}</p>
+        <p className="mt-5">{`Ciclo nº ${ciclo}`}</p>
 
         <div className="flex justify-center text-2xl mt-5">
-          <button className={`p-2 ${hoverColor} rounded-xl`} onClick={() => {play_click();setTimeSeconds(0); setTimeMinuts(tempo[tipoTimer]); }}><i className="fa-solid fa-arrow-rotate-right"></i></button>
-          <button className={`font-semibold mx-3 p-2 ${hoverColor} rounded-xl`} onClick={()=>{play_click();setTimerAtivo(!timerAtivo);}}>{timerAtivo ? 'Pause' : 'Start'}</button>
-          <button onClick={()=>{play_click(); setTimeMinuts(-1); setTimeSeconds(0); setPulado(true);}} className={`p-2 ${hoverColor} rounded-xl`}><i className="fa-solid fa-forward-step"></i></button>
+          <button className={`p-2 ${hoverColor} rounded-xl`} onClick={() =>{play_click(); timerAtualOpt.resetCountdown(); setIsRunning(false)}}>
+            <i className="fa-solid fa-arrow-rotate-right"></i>
+          </button>
+
+          {isRunning ? 
+          <button className={`font-semibold mx-3 p-2 ${hoverColor} rounded-xl`} onClick={()=>{play_click(); timerAtualOpt.stopCountdown(); setIsRunning(false)}}>
+            Pause
+          </button>
+          :
+          <button className={`font-semibold mx-3 p-2 ${hoverColor} rounded-xl`} onClick={()=>{play_click(); timerAtualOpt.startCountdown(); setIsRunning(true)}}>
+            Start
+          </button>
+          }
+          
+          <button onClick={()=>{pulado.current = true; play_click(); troca_timer();}} className={`p-2 ${hoverColor} rounded-xl`}>
+            <i className="fa-solid fa-forward-step"></i>
+          </button>
         </div>
 
       </div>
     </section>
   )
-
-  return <p className="bg-red-200 bg-blue-200 bg-green-200">a</p>
 }
 
 export default Pomodoro

@@ -127,12 +127,12 @@
     "id": "557caba1-c3ba-4458-8a42-2e4d20e01212",
     "nome": "Curso Dam\u00e1sio",
     "feito": false,
-    "aberto": false,
+    "aberto": true,
     "subtarefas": [
       {
         "id": "04ecd0b4-5001-4dfa-b447-872884a8ab61",
         "nome": "Evangelismo",
-        "feito": false,
+        "feito": true,
         "aberto": true,
         "subtarefas": []
       },

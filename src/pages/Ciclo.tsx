@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, type FormEvent } from "react"
 import enderecoBack from "../others/VarsGlobal.tsx"
 
 interface Props{
@@ -14,7 +14,7 @@ const Ciclo = (props: Props) => {
 
   useEffect(() => {
     fetch(`${enderecoBack}/ler_ciclo`, {credentials: 'include'}).then(res=>
-      res.json().then(json => setValues(json)).catch(()=>{alert('Erro ao carregar ciclo'); setValues([])}).finally(setUpdateValues(false))
+      res.json().then(json => setValues(json)).catch(()=>{alert('Erro ao carregar ciclo'); setValues([])}).finally(()=>setUpdateValues(false))
     )
 
     return () => {
@@ -23,13 +23,13 @@ const Ciclo = (props: Props) => {
   }, [updateValues])
 
   // Funções de carregamento
-  function add_disciplina(e: FormElement<HTMLFormElement>) {
+  function add_disciplina(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
     const form = new FormData(e.currentTarget)
 
     const nome = form.get('nome') as string;
-    const horas = form.get('horas') as number;
+    const horas = form.get('horas') as string;
 
     fetch(`${enderecoBack}/add_ciclo?nome=${nome}&horas=${horas}`, {credentials: 'include'}).then(res =>
       !res.ok ? alert('Erro ao adicionar disciplina') : setUpdateValues(true)
@@ -90,7 +90,7 @@ const Ciclo = (props: Props) => {
            return <div key={item["id"]} 
           className={`mt-3 flex p-3 rounded-xl w-full ${bg}`}>
 
-            <button className="mr-1.5" onClick={()=> reseta_ciclo(item["id"])}><i className="fa-solid fa-trash" /></button>
+            <button className="mr-1.5" onClick={()=> deleta_ciclo(item["id"])}><i className="fa-solid fa-trash" /></button>
             <input name="ciclo" type="radio" value={item["id"]} className="mr-1.5" />
             <label htmlFor={item["id"]}>{item["nome"]}</label>
 
