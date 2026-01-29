@@ -22,7 +22,6 @@ const Pomodoro = (props: Props) => {
   const [isRunning, setIsRunning] = useState(false)
   const [tipoTimer, setTipoTimer] = useState(0)
   const [ciclo, setCiclo] = useState(1)
-  const pulado = useRef(false)
   const refCiclo = useRef(1)
 
   const [play_alerta, opt_alerta] = useSound(alerta, {volume: 0.5});
@@ -31,18 +30,16 @@ const Pomodoro = (props: Props) => {
   let timerAtual = timer25;
   let timerAtualOpt = timer25opt;
   
-  function troca_timer(){
-    if(!pulado.current){
+  function troca_timer(pulado: boolean){
+    if(!pulado){
       let texto = tipoTimer != 0 ? 'Volte ao trabalho!' : 'Descanse um pouco'
 
       play_alerta()
       alert(texto)
-      opt_alerta.stop()
     }else{
       timerAtualOpt.resetCountdown()
     }
 
-    pulado.current = false
     setIsRunning(false)
 
     if(tipoTimer == 0){
@@ -66,7 +63,7 @@ const Pomodoro = (props: Props) => {
     document.title = isRunning ? `Timer: ${minutos}:${segundos}` : 'Gerenciador de Estudos'
   }, [timerAtual, isRunning])
 
-  timerAtual == 0 && troca_timer();
+  timerAtual == 0 && troca_timer(false);
 
   // Adiciona um zero a esquerda se necessário
   let minutos_number = Math.trunc((timerAtual / 60))
@@ -110,7 +107,7 @@ const Pomodoro = (props: Props) => {
           </button>
           }
           
-          <button onClick={()=>{pulado.current = true; play_click(); troca_timer();}} className={`p-2 ${hoverColor} rounded-xl`}>
+          <button onClick={()=>{play_click(); troca_timer(true);}} className={`p-2 ${hoverColor} rounded-xl`}>
             <i className="fa-solid fa-forward-step"></i>
           </button>
         </div>
