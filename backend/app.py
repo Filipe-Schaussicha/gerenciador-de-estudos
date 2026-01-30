@@ -1,10 +1,11 @@
 from flask import Flask, session, request
 from flask_session import Session
-from helpers import ler_json, salvar_json, login_required, contatenar_arvore_tarefas, achar_tarefa, ler_bd
+from helpers import ler_json, salvar_json, login_required, contatenar_arvore_tarefas, achar_tarefa, ler_bd, ler_bd_historico
 from flask_cors import CORS
 import json
 import uuid
 import sqlite3 as sql
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -19,10 +20,46 @@ usuarios = [
 
 DB_PATH = "static/banco.db"
 
+@app.route('/add_tempo')
+def add_tempo():
+  if "user_id" not in session:
+    return 'erro', 401
+  if not request.args.get("id"):
+    return 'erro', 400
+
+  dados = ler_bd()
+  nome = ''
+  hoje = datetime.today().strftime("%Y-%m-%d")
+  try:
+    id = int(request.args.get("id"))
+  except ValueError:
+    return 'erro', 400
+
+  con = sql.connect(DB_PATH)
+  cur = con.cursor()
+
+  for dado in dados:
+    if dado["id"] == id:
+      cur.execute("UPDATE disciplinas SET h_estudadas = ? WHERE id = ?;", (dado["estudadas"] + 1, dado["id"]))
+      nome = dado["nome"]
+  
+  res = cur.execute("SELECT * FROM historico WHERE data = ? AND disciplina = ?;", (hoje, nome))
+
+  dados_historico = res.fetchall()
+
+  if len(dados_historico) == 0:
+    cur.execute("INSERT INTO historico(data, disciplina) VALUES (?, ?);", (hoje, nome))
+  else:
+    cur.execute("UPDATE historico SET horas = ? WHERE data = ? AND disciplina = ?;", (dados_historico[0][2] + 1, hoje, nome))
+
+  con.commit()
+
+  return 'sucesso', 200
+
 @app.route('/reseta_ciclo')
 def reseta_ciclo():
     if "user_id" not in session:
-        return 'erro', 401
+      return 'erro', 401
 
     con = sql.connect(DB_PATH)
     cur = con.cursor()
@@ -34,9 +71,9 @@ def reseta_ciclo():
 @app.route('/add_ciclo')
 def add_ciclo():
     if "user_id" not in session:
-        return 'erro', 401
+      return 'erro', 401
     if not request.args.get("nome") or not request.args.get("horas"):
-        return 'erro', 400
+      return 'erro', 400
 
     con = sql.connect(DB_PATH)
     cur = con.cursor()
@@ -49,9 +86,9 @@ def add_ciclo():
 @app.route('/apaga_ciclo')
 def apaga_ciclo():
     if "user_id" not in session:
-        return 'erro', 401
+      return 'erro', 401
     if not request.args.get("id"):
-        return 'erro', 400
+      return 'erro', 400
 
     con = sql.connect(DB_PATH)
     cur = con.cursor()
@@ -63,7 +100,7 @@ def apaga_ciclo():
 @app.route('/ler_ciclo')
 def ler_ciclo():
     if "user_id" not in session:
-        return 'erro', 401
+      return 'erro', 401
 
     dados = ler_bd()
     return json.dumps(dados)

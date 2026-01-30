@@ -2,7 +2,8 @@ import { useState, useEffect, type FormEvent, useRef } from "react"
 import enderecoBack from "../others/VarsGlobal.tsx"
 
 interface Props{
-    className: string
+  className: string
+  fimPomodoro: number
 }
 
 const Ciclo = (props: Props) => {
@@ -20,6 +21,7 @@ const Ciclo = (props: Props) => {
 
   // Disciplina selecionada
   const selecionada = useRef(-1)
+  const ultimoFetch = useRef<null | number>(null)
 
   // Lê a lista de disciplinas do backend
   useEffect(() => {
@@ -34,11 +36,7 @@ const Ciclo = (props: Props) => {
           }
         }))
       }
-    ).catch(()=>{alert('Erro ao carregar ciclo'); setValues([])}).finally(()=>setUpdateValues(false)))
-
-    return () => {
-      setValues([])
-    }
+    ).catch(()=>{alert('Erro ao carregar ciclo');}).finally(()=>setUpdateValues(false)))
   }, [updateValues])
 
   // Função para adicionar disciplina
@@ -68,6 +66,16 @@ const Ciclo = (props: Props) => {
       !res.ok ? alert('Erro ao apagar disciplina') : setUpdateValues(true)
     ).catch(e=> alert(`Erro: ${e}`))
   }
+
+  // Adiciona um ciclo ao fim do pomodoro timer
+  // TODO: Terminar essa funcionalidade
+  useEffect(()=>{
+    if (props.fimPomodoro == 0 || props.fimPomodoro == ultimoFetch.current) return
+
+    fetch(`${enderecoBack}/add_tempo?id=${selecionada.current}`, {credentials: 'include'}).then(res => {
+      !res.ok ? alert("Erro ao atualizar horas") : setUpdateValues(true)
+    }).catch((e) => alert(`Erro: ${e}`))
+  }, [props.fimPomodoro])
 
   return (
     <section className={props.className}>
@@ -130,7 +138,6 @@ const Ciclo = (props: Props) => {
           </div>
         })}
       </div>
-
     </section>
   )
 }

@@ -6,6 +6,7 @@ import { useCountdown } from "usehooks-ts"
 
 interface Props{
   className: string
+  onFimPomodoro: ()=>void
 }
 
 const Pomodoro = (props: Props) => {
@@ -46,6 +47,7 @@ const Pomodoro = (props: Props) => {
     // Muda o tipo de timer
     if(tipoTimer == 0){
       setTipoTimer(refCiclo.current % 4 == 0 ? 2 : 1)
+      props.onFimPomodoro()
     }else{
       refCiclo.current = refCiclo.current + 1
       setTipoTimer(0)
