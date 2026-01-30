@@ -57,8 +57,6 @@ function Tarefas(props: Props){
         {/* Adicionar menu */}
         <div className="flex items-center">
             <Menu menuButton={<div className="mr-3"><i className="fa-solid fa-bars"></i></div>}>
-                {!props.isComeco && <MenuItem onClick={()=>mover_tarefas(-1)}><i className="fa-solid fa-angle-up"></i> Subir</MenuItem>}
-                {!props.isFim && <MenuItem onClick={()=>mover_tarefas(1)}><i className="fa-solid fa-angle-down"></i> Descer</MenuItem>}
                 {props.subtarefas.length > 0 && <MenuItem onClick={setar_tarefa_aberta}>
                     {props.aberto ?
                     <><i className="fa-solid fa-eye-slash"></i> Esconder</>
@@ -66,6 +64,11 @@ function Tarefas(props: Props){
                     <><i className="fa-solid fa-eye"></i> Mostar Subtarefas</>
                     }       
                 </MenuItem>}
+                
+                {!props.isComeco && <MenuItem onClick={()=>mover_tarefas(-1)}><i className="fa-solid fa-angle-up"></i> Subir</MenuItem>}
+
+                {!props.isFim && <MenuItem onClick={()=>mover_tarefas(1)}><i className="fa-solid fa-angle-down"></i> Descer</MenuItem>}
+                
                 <MenuItem onClick={deletar_tarefa}><i className="fa-solid fa-trash"></i> Deletar</MenuItem>
             </Menu>
             {/*<button className="mr-3"><i className="fa-solid fa-bars"></i></button>*/}

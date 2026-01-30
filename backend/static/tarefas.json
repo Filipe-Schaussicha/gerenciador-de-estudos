@@ -126,7 +126,7 @@
   {
     "id": "557caba1-c3ba-4458-8a42-2e4d20e01212",
     "nome": "Curso Dam\u00e1sio",
-    "feito": false,
+    "feito": true,
     "aberto": true,
     "subtarefas": [
       {
@@ -139,14 +139,14 @@
       {
         "id": "1c48a55c-61a2-455b-b025-111d1245ea00",
         "nome": "Missiologia",
-        "feito": false,
+        "feito": true,
         "aberto": true,
         "subtarefas": []
       },
       {
         "id": "5da51808-5c60-44db-b159-12dd239e5bea",
         "nome": "Bibliologia",
-        "feito": false,
+        "feito": true,
         "aberto": true,
         "subtarefas": []
       }
@@ -156,12 +156,12 @@
     "id": "1587d708-2b1a-4473-a021-c0ba595daf30",
     "nome": "Arrumar aparelhos",
     "feito": false,
-    "aberto": false,
+    "aberto": true,
     "subtarefas": [
       {
         "id": "37325d74-7be5-47a3-9c00-7e946a5c7d00",
         "nome": "TV",
-        "feito": false,
+        "feito": true,
         "aberto": true,
         "subtarefas": []
       },
@@ -175,14 +175,14 @@
       {
         "id": "db2bfed7-ee99-4c75-8803-fa34a227b875",
         "nome": "App Sumup",
-        "feito": false,
+        "feito": true,
         "aberto": true,
         "subtarefas": []
       },
       {
         "id": "fddab9a8-4b47-4a9b-9b51-2e70d349a7d3",
         "nome": "Impressora",
-        "feito": false,
+        "feito": true,
         "aberto": true,
         "subtarefas": []
       },
