@@ -50,7 +50,7 @@
           {
             "id": "9950c8ae-3144-4240-a1a9-644e52909958",
             "nome": "Criar aba hist\u00f3rico",
-            "feito": false,
+            "feito": true,
             "aberto": true,
             "subtarefas": []
           }
@@ -174,78 +174,6 @@
       {
         "id": "35e5582e-ac28-4979-a31d-658edef5fb2b",
         "nome": "Microfone",
-        "feito": false,
-        "aberto": true,
-        "subtarefas": []
-      }
-    ]
-  },
-  {
-    "id": "8c1048d1-fe6b-41ac-820c-66e16d8a186c",
-    "nome": "Site com React",
-    "feito": false,
-    "aberto": true,
-    "subtarefas": [
-      {
-        "id": "4fa6f8b3-b3a1-4772-8565-fb3bc7cda988",
-        "nome": "Jogo de encontrar versos Holyrics",
-        "feito": false,
-        "aberto": true,
-        "subtarefas": []
-      },
-      {
-        "id": "b00af59a-2ce6-4ff3-9a7f-305818fe6682",
-        "nome": "Portif\u00f3lio de display de projetos programa\u00e7\u00e3o / tradu\u00e7\u00f5es",
-        "feito": false,
-        "aberto": true,
-        "subtarefas": []
-      },
-      {
-        "id": "ee6799dd-e60d-4cdd-ab48-3e0a736f55f7",
-        "nome": "Site not\u00edcias com World News API",
-        "feito": false,
-        "aberto": true,
-        "subtarefas": []
-      },
-      {
-        "id": "3ca6b928-b41e-4355-8281-734a2d9ea8ed",
-        "nome": "Testar Bored API",
-        "feito": false,
-        "aberto": true,
-        "subtarefas": []
-      },
-      {
-        "id": "633b6ff2-a912-4123-8258-4d4d221010a4",
-        "nome": "Fazer gerenciador de economias",
-        "feito": false,
-        "aberto": true,
-        "subtarefas": []
-      },
-      {
-        "id": "068b661d-efb2-490e-a320-b86b6a44656a",
-        "nome": "Fazer player Youtube com Reactnative",
-        "feito": false,
-        "aberto": true,
-        "subtarefas": []
-      }
-    ]
-  },
-  {
-    "id": "60a8d0da-bef8-46f1-95b5-690385a9d3f9",
-    "nome": "Projetos Arduino",
-    "feito": false,
-    "aberto": false,
-    "subtarefas": [
-      {
-        "id": "2fb4ad5a-651a-4da3-80e9-6349a46b87d7",
-        "nome": "Fazer um player de m\u00fasica port\u00e1til em uma carca\u00e7a de fita k7",
-        "feito": false,
-        "aberto": true,
-        "subtarefas": []
-      },
-      {
-        "id": "472eefd3-a8c4-4c8e-9049-ee3a4a874da0",
-        "nome": "Fazer tocador de m\u00fasicas para o pai",
         "feito": false,
         "aberto": true,
         "subtarefas": []

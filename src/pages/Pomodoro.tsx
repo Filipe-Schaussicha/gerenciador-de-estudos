@@ -14,6 +14,7 @@ const Pomodoro = (props: Props) => {
 
   // Menu histórico
   const [historicoAberto, setHistoricoAberto] = useState(false)
+  const [recarregarHistorico, setRecarregarHistorico] = useState(0)
 
   // Timers
   const [timer25, timer25opt] = useCountdown({countStart: 25 * 60})
@@ -51,6 +52,7 @@ const Pomodoro = (props: Props) => {
     if(tipoTimer == 0){
       setTipoTimer(refCiclo.current % 4 == 0 ? 2 : 1)
       props.onFimPomodoro()
+      setRecarregarHistorico(anterior => anterior + 1)
     }else{
       refCiclo.current = refCiclo.current + 1
       setTipoTimer(0)
@@ -140,7 +142,7 @@ const Pomodoro = (props: Props) => {
 
       {historicoAberto &&
         <div className="mt-3">
-          <Historico />
+          <Historico mudanca={recarregarHistorico} />
         </div>
       }
     </section>

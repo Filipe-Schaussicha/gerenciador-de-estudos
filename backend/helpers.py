@@ -68,25 +68,3 @@ def ler_bd():
         })
 
     return final
-
-def ler_bd_historico():
-    con = sql.connect("static/banco.db")
-    cur = con.cursor()
-
-    res = cur.execute("SELECT * FROM historico")
-
-    dados = res.fetchall()
-
-    con.close()
-
-    final = []
-
-    for dado in dados:
-        final.append({
-            "id": dado[0],
-            "data": dado[1],
-            "horas": dado[2],
-            "disciplina": dado[3]
-        })
-
-    return final

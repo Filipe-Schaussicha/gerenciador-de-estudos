@@ -1,6 +1,6 @@
 from flask import Flask, session, request
 from flask_session import Session
-from helpers import ler_json, salvar_json, login_required, contatenar_arvore_tarefas, achar_tarefa, ler_bd, ler_bd_historico
+from helpers import ler_json, salvar_json, login_required, contatenar_arvore_tarefas, achar_tarefa, ler_bd
 from flask_cors import CORS
 import json
 import uuid
@@ -21,7 +21,7 @@ usuarios = [
 
 DB_PATH = "static/banco.db"
 
-@app.route('/get_pomoro_disciplina')
+@app.route('/get_pomodoro_disciplina')
 def get_pomoro_disciplina():
   """Retorna um array com os pomodoros gastos por disciplina"""
   if "user_id" not in session:
@@ -53,7 +53,7 @@ def get_pomoro_disciplina():
 
   return json.dumps(formato_final)
 
-@app.route('/get_pomoro_data')
+@app.route('/get_pomodoro_data')
 def get_pomoro_data():
   """Retorna um array com os pomodoros gastos por dia"""
   if "user_id" not in session:
@@ -87,17 +87,6 @@ def get_pomoro_data():
 
   return json.dumps(formato_final)
 
-@app.route('/ler_historico')
-def ler_historico():
-  if "user_id" not in session:
-    return 'erro', 401
-  
-  dados = ler_bd_historico()
-
-  dados_sortidos = sorted(dados, key=lambda dado: dado["data"])
-
-  return dados_sortidos
-
 @app.route('/add_tempo')
 def add_tempo():
   if "user_id" not in session:
@@ -106,7 +95,7 @@ def add_tempo():
     return 'erro', 400
 
   dados = ler_bd()
-  nome = ''
+  nome = 'Outros'
   hoje = datetime.today().strftime("%Y-%m-%d")
   try:
     id = int(request.args.get("id"))
