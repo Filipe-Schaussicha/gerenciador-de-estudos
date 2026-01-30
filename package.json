@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@gabrielyotoo/react-use-timer": "^2.3.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^7.3.7",
+    "@mui/x-charts": "^8.26.0",
     "@szhsin/react-menu": "^4.5.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

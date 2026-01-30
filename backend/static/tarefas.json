@@ -31,19 +31,19 @@
         "id": "f51109ac-e19e-484c-b056-3d86ae574e68",
         "nome": "Pomodoro timer",
         "feito": false,
-        "aberto": false,
+        "aberto": true,
         "subtarefas": [
           {
             "id": "fcb0a79f-8946-46cd-ade4-2bb17a678433",
             "nome": "Criar banco hist\u00f3rico",
-            "feito": false,
+            "feito": true,
             "aberto": true,
             "subtarefas": []
           },
           {
             "id": "ed99d95e-2596-40c2-9172-f5dec8c8d474",
             "nome": "Enviar informa\u00e7\u00f5es",
-            "feito": false,
+            "feito": true,
             "aberto": true,
             "subtarefas": []
           },
@@ -59,7 +59,7 @@
       {
         "id": "f6b2963b-092a-4ec2-9572-a4925c6f84ee",
         "nome": "Ciclo de estudos",
-        "feito": false,
+        "feito": true,
         "aberto": true,
         "subtarefas": [
           {
@@ -108,7 +108,7 @@
           {
             "id": "29e11f1f-e1e3-4608-9a3a-f586a70cec59",
             "nome": "Criar display de ciclos",
-            "feito": false,
+            "feito": true,
             "aberto": true,
             "subtarefas": []
           },
@@ -120,35 +120,6 @@
             "subtarefas": []
           }
         ]
-      }
-    ]
-  },
-  {
-    "id": "557caba1-c3ba-4458-8a42-2e4d20e01212",
-    "nome": "Curso Dam\u00e1sio",
-    "feito": true,
-    "aberto": true,
-    "subtarefas": [
-      {
-        "id": "04ecd0b4-5001-4dfa-b447-872884a8ab61",
-        "nome": "Evangelismo",
-        "feito": true,
-        "aberto": true,
-        "subtarefas": []
-      },
-      {
-        "id": "1c48a55c-61a2-455b-b025-111d1245ea00",
-        "nome": "Missiologia",
-        "feito": true,
-        "aberto": true,
-        "subtarefas": []
-      },
-      {
-        "id": "5da51808-5c60-44db-b159-12dd239e5bea",
-        "nome": "Bibliologia",
-        "feito": true,
-        "aberto": true,
-        "subtarefas": []
       }
     ]
   },
@@ -213,7 +184,7 @@
     "id": "8c1048d1-fe6b-41ac-820c-66e16d8a186c",
     "nome": "Site com React",
     "feito": false,
-    "aberto": false,
+    "aberto": true,
     "subtarefas": [
       {
         "id": "4fa6f8b3-b3a1-4772-8565-fb3bc7cda988",
@@ -239,6 +210,20 @@
       {
         "id": "3ca6b928-b41e-4355-8281-734a2d9ea8ed",
         "nome": "Testar Bored API",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      },
+      {
+        "id": "633b6ff2-a912-4123-8258-4d4d221010a4",
+        "nome": "Fazer gerenciador de economias",
+        "feito": false,
+        "aberto": true,
+        "subtarefas": []
+      },
+      {
+        "id": "068b661d-efb2-490e-a320-b86b6a44656a",
+        "nome": "Fazer player Youtube com Reactnative",
         "feito": false,
         "aberto": true,
         "subtarefas": []

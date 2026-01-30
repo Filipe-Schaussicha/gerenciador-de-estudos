@@ -3,6 +3,7 @@ import useSound from "use-sound"
 import alerta from "../assets/alerta.mp3"
 import click_sound from "../assets/click.mp3"
 import { useCountdown } from "usehooks-ts"
+import Historico from "../components/Historico"
 
 interface Props{
   className: string
@@ -10,7 +11,9 @@ interface Props{
 }
 
 const Pomodoro = (props: Props) => {
-  // TODO: Salvar dados
+
+  // Menu histórico
+  const [historicoAberto, setHistoricoAberto] = useState(false)
 
   // Timers
   const [timer25, timer25opt] = useCountdown({countStart: 25 * 60})
@@ -93,8 +96,13 @@ const Pomodoro = (props: Props) => {
 
       {/* Botão de estátísticas */}
       <div className="bg-orange-200 mt-3 rounded-xl">
-        <button onClick={() =>play_alerta()} className="hover:bg-orange-300 px-3 py-1 rounded-xl font-medium block w-full">
-        <i className="fa-solid fa-chart-column"></i> Mostar Estatísticas</button>
+        <button onClick={() =>setHistoricoAberto(valor => !valor)} className="hover:bg-orange-300 px-3 py-1 rounded-xl font-medium block w-full">
+        {historicoAberto ?
+          <><i className="fa-solid fa-xmark"></i> Esconder Estatísticas</>
+          :
+          <><i className="fa-solid fa-chart-column"></i> Mostar Estatísticas</>
+        }
+        </button>
       </div> 
 
       {/* Timer */}
@@ -129,6 +137,12 @@ const Pomodoro = (props: Props) => {
           </button>
         </div>
       </div>
+
+      {historicoAberto &&
+        <div className="mt-3">
+          <Historico />
+        </div>
+      }
     </section>
   )
 }

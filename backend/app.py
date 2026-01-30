@@ -5,7 +5,8 @@ from flask_cors import CORS
 import json
 import uuid
 import sqlite3 as sql
-from datetime import datetime
+from datetime import datetime, timedelta
+import time
 
 app = Flask(__name__)
 
@@ -19,6 +20,83 @@ usuarios = [
 ]
 
 DB_PATH = "static/banco.db"
+
+@app.route('/get_pomoro_disciplina')
+def get_pomoro_disciplina():
+  """Retorna um array com os pomodoros gastos por disciplina"""
+  if "user_id" not in session:
+    return 'erro', 401
+  
+  min_data = '2026-01-01'
+
+  if request.args.get("timespan"):
+    try:
+      timespan = int(request.args.get("timespan"))
+    except ValueError:
+      return 'erro', 400
+    
+    if timespan != -1:
+      min_data = (datetime.now() - timedelta(days=timespan)).strftime("%Y-%m-%d")
+
+  con = sql.connect("static/banco.db")
+  cur = con.cursor()
+  res = cur.execute("SELECT disciplina, SUM(horas) FROM historico WHERE data >= ? GROUP BY disciplina ORDER BY SUM(horas) DESC;", (min_data,))
+  dados = res.fetchall()
+  con.close()
+
+  formato_final = []
+  for dado in dados:
+    formato_final.append({
+      "disciplina": dado[0],
+      "pomodoros": dado[1]
+    })
+
+  return json.dumps(formato_final)
+
+@app.route('/get_pomoro_data')
+def get_pomoro_data():
+  """Retorna um array com os pomodoros gastos por dia"""
+  if "user_id" not in session:
+    return 'erro', 401
+  
+  min_data = '2026-01-01'
+
+  if request.args.get("timespan"):
+    try:
+      timespan = int(request.args.get("timespan"))
+    except ValueError:
+      return 'erro', 400
+
+    if timespan != -1:
+      min_data = (datetime.now() - timedelta(days=timespan)).strftime("%Y-%m-%d")
+
+  con = sql.connect("static/banco.db")
+  cur = con.cursor()
+
+  res = cur.execute("SELECT data, SUM(horas) FROM historico WHERE data >= ? GROUP BY data ORDER BY data ASC;", (min_data,))
+
+  dados = res.fetchall()
+  con.close()
+
+  formato_final = []
+  for dado in dados:
+    formato_final.append({
+      "data": dado[0],
+      "pomodoros": dado[1]
+    })
+
+  return json.dumps(formato_final)
+
+@app.route('/ler_historico')
+def ler_historico():
+  if "user_id" not in session:
+    return 'erro', 401
+  
+  dados = ler_bd_historico()
+
+  dados_sortidos = sorted(dados, key=lambda dado: dado["data"])
+
+  return dados_sortidos
 
 @app.route('/add_tempo')
 def add_tempo():

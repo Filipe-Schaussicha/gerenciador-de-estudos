@@ -73,7 +73,7 @@ def ler_bd_historico():
     con = sql.connect("static/banco.db")
     cur = con.cursor()
 
-    res = cur.execute("SELECT * FROM historico;")
+    res = cur.execute("SELECT * FROM historico")
 
     dados = res.fetchall()
 
