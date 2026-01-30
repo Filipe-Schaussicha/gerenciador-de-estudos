@@ -1,5 +1,5 @@
 import { ChartDataProvider, ChartsAxisHighlight, ChartsGrid, ChartsLegend, ChartsSurface, ChartsTooltip, ChartsXAxis, ChartsYAxis, LinePlot, PieChart } from "@mui/x-charts";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import enderecoBack from "../others/VarsGlobal";
 import { Box, Typography } from "@mui/material";
 
@@ -57,7 +57,7 @@ function Historico(props: Props){
         <p>Carregando...</p> : carregandoData == -1 ? <p>Erro ao carregar</p>
             :
         <Box sx={{ width: '100%' }}>
-            <Typography textAlign="center">Pomodoros pro dia</Typography>
+            <Typography textAlign="center">Pomodoros por dia</Typography>
 
             <ChartDataProvider
                 height = {300}
