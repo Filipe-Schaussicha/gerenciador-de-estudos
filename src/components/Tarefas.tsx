@@ -59,7 +59,7 @@ function Tarefas(props: Props){
             <Menu menuButton={<div className="mr-3"><i className="fa-solid fa-bars"></i></div>}>
                 {props.subtarefas.length > 0 && <MenuItem onClick={setar_tarefa_aberta}>
                     {props.aberto ?
-                    <><i className="fa-solid fa-eye-slash"></i> Esconder</>
+                    <><i className="fa-solid fa-eye-slash"></i> Esconder Subtarefas</>
                     :
                     <><i className="fa-solid fa-eye"></i> Mostar Subtarefas</>
                     }       

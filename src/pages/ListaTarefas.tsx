@@ -45,7 +45,7 @@ const ListaTarefas = (props: Props) => {
             <form className="my-3 bg-orange-100 rounded-xl py-3 px-1.5"
              onSubmit={(e)=>{add_tarefa(e); setRecarregar(true); setRecarregarListaSubtarefasMenu(true); setTextoInput('')}}>
 
-  <select className={`bg-white p-1 my-1.5 rounded-xl max-w-full`} name="id" defaultValue={''}>
+                <select className={`bg-white p-1 my-1.5 rounded-xl max-w-full`} name="id" defaultValue={''}>
                     <option value="" key={'0'}>Novo Projeto</option>
 
                     {listaSubtarefasMenu.map(item => (

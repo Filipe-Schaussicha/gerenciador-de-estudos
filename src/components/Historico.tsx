@@ -116,11 +116,10 @@ function Historico(props: Props){
                 <Typography textAlign="center" marginBottom={1} >Pomodoros por Disciplina</Typography>
 
                 <PieChart 
-                    width={250}
-                    height={250}
+                    height={300}
                     series={[{
                         arcLabel: (item) => `${item.value}`,
-                        innerRadius: 40,
+                        innerRadius: 10,
                         data: dadosDisciplina
                     }]}
                 />
