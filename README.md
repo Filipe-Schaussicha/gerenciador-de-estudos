@@ -33,7 +33,7 @@ Abaixo irá aparecer todas as disciplinas existentes, você pode selecionar uma 
 Por fim, as cores de fundo indicam o seu progresso, sendo vermelho quando o objetivo ainda não foi completo, azul quando foi completo e verde quando você estudou a mais.
 
 ## Razão da criação do projeto
-A maior inspiração para esse projeto foi o site [pomofocus.io](pomofocus.io) que tem um timer Pomodoro e um sistema de tarefas (que é limitado para usuário gratuitos). Porém eu queria uma ferramenta semelhante que satisfizesse melhor as minhas necessidades, com a inclusão de um sistema para gerenciar um ciclo de estudo, um sistema de tarefas que permitisse um número ilimitado de subtarefas (pois é do meu gosto quebrar problemas em partes menores) e que tivesse melhores estatísticas para o acompanhamento de meu progresso. 
+A maior inspiração para esse projeto foi o site [pomofocus.io](https://pomofocus.io/) que tem um timer Pomodoro e um sistema de tarefas (que é limitado para usuário gratuitos). Porém eu queria uma ferramenta semelhante que satisfizesse melhor as minhas necessidades, com a inclusão de um sistema para gerenciar um ciclo de estudo, um sistema de tarefas que permitisse um número ilimitado de subtarefas (pois é do meu gosto quebrar problemas em partes menores) e que tivesse melhores estatísticas para o acompanhamento de meu progresso. 
 
 ## Colaboração no projeto
 Esse é um projeto pessoal, entretanto eu **não há nenhum problema em outras pessoas usarem** ou criarem forks desse projeto. Eu também estou **aberto a contribuições**, não há nenhumas regras em específico, porém eu recomendo que **tenha bom senso** na suas pull requests e que evite o uso de IA exceto se você souber o que está fazendo.
