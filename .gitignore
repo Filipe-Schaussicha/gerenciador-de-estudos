@@ -28,3 +28,4 @@ backend/myenv/
 backend/flask_session/
 backend/older/
 backend/__pycache__/
+.env

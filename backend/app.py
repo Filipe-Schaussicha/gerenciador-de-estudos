@@ -9,16 +9,20 @@ from datetime import datetime, timedelta
 import time
 from werkzeug.security import check_password_hash
 import os
+import redis
 
 app = Flask(__name__)
 
 app.secret_key = os.getenv("CHAVE_SECRETA")
 app.config.update(
-  SESSION_COOKIE_HTTPONLY=True,
-  SESSION_COOKIE_SECURE=True,
-  PERMANENT_SESSION_LIFETIME=36000 
+  SESSION_TYPE='redis',
+  SESSION_PERMANENT=False,
+  SESSION_USE_SIGNER=True,
+  SESSION_REDIS=redis.from_url(os.getenv("REDIS_URL")) 
 )
 CORS(app, supports_credentials=True, origins=[os.getenv("LINK_FRONT")])
+
+Session(app)
 
 DB_PATH = "static/banco.db"
 
