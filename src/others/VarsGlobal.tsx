@@ -1,3 +1,3 @@
-const enderecoBack = 'http://localhost:5000';
+const enderecoBack = import.meta.env.VITE_API_URL;
 
 export default enderecoBack;
