@@ -12,18 +12,19 @@ import os
 
 app = Flask(__name__)
 
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
+app.secret_key = os.getenv("CHAVE_SECRETA")
 app.config.update(
-  SESSION_COOKIE_SAMESITE="None",
-  SESSION_COOKIE_SECURE=True,
   SESSION_COOKIE_HTTPONLY=True,
+  SESSION_COOKIE_SECURE=True,
+  PERMANENT_SESSION_LIFETIME=36000 
 )
-
 Session(app)
 CORS(app, supports_credentials=True, origins=[os.getenv("LINK_FRONT")])
 
 DB_PATH = "static/banco.db"
+
+USUARIO = os.getenv("USUARIO")
+SENHA = os.getenv("SENHA")
 
 @app.route('/get_pomodoro_disciplina')
 def get_pomoro_disciplina():
@@ -316,22 +317,15 @@ def logar():
   """
   data = request.get_json()
 
-  if not data.get('user') or not data.get('senha') or not data:
+  if not res.get('user') or not data.get('senha') or not data:
     return json.dumps({'msg': 'loginRecusado'}), 401
   
   usuario = data.get('user')
   senha = data.get('senha')
 
-  con = sql.connect("static/banco.db")
-  cur = con.cursor()
-  res = cur.execute("SELECT * FROM usuarios;")
-  usuarios = res.fetchall()
-  con.close()
-
-  for user in usuarios:
-    if user[1] == usuario and check_password_hash(user[2], data.get('senha')):
-      session['user_id'] = user[0]
-      return json.dumps({'msg': 'loginAceito'})
+  if USUARIO == usuario and SENHA == senha:
+    session['user_id'] = USUARIO
+    return json.dumps({'msg': 'loginAceito'}), 200
   
   return json.dumps({'msg': 'loginRecusado'}), 401
 
@@ -339,6 +333,6 @@ def logar():
 def logout():
   """Deslogar"""
   session.clear()
-  redirect('/login')
+  return 'deslogado', 200
 
 #app.run(host="localhost", port=5000, debug=True)
