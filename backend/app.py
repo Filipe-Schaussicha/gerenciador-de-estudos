@@ -18,7 +18,6 @@ app.config.update(
   SESSION_COOKIE_SECURE=True,
   PERMANENT_SESSION_LIFETIME=36000 
 )
-Session(app)
 CORS(app, supports_credentials=True, origins=[os.getenv("LINK_FRONT")])
 
 DB_PATH = "static/banco.db"
