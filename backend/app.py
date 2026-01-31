@@ -7,6 +7,7 @@ import uuid
 import sqlite3 as sql
 from datetime import datetime, timedelta
 import time
+from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 
@@ -14,10 +15,6 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
-
-usuarios = [
-  {'id': 1, 'user': 'filipe', 'senha': 'filipe378'}
-]
 
 DB_PATH = "static/banco.db"
 
@@ -318,9 +315,15 @@ def logar():
   usuario = data.get('user')
   senha = data.get('senha')
 
+  con = sql.connect("static/banco.db")
+  cur = con.cursor()
+  res = cur.execute("SELECT * FROM usuarios;")
+  usuarios = res.fetchall()
+  con.close()
+
   for user in usuarios:
-    if user["user"] == usuario and user["senha"] == senha:
-      session['user_id'] = user['id']
+    if user[1] == usuario and check_password_hash(user[2], data.get('senha')):
+      session['user_id'] = user[0]
       return json.dumps({'msg': 'loginAceito'})
   
   return json.dumps({'msg': 'loginRecusado'}), 401
@@ -330,28 +333,5 @@ def logout():
   """Deslogar"""
   session.clear()
   redirect('/login')
-
-"""
-@app.route('/abrir_data')
-def abrir_data():
-  #Salva se uma data teve as tarefas mostradas ou não
-
-  if "user_id" not in session:
-    return json.dumps({"ok": False}), 401
-  
-  if not request.args.get('data') or not request.args.get('valor'):
-    return 'erro', 400
-  
-  dados = ler_json()
-
-  data = request.args.get('data')
-  valor =  True if request.args.get('valor') == 'true' else False
-
-  dados[get_index_data(dados, data)]['aberto'] = valor
-
-  salvar_json(dados)
-
-  return 'sucess', 200
-"""
 
 #app.run(host="localhost", port=5000, debug=True)

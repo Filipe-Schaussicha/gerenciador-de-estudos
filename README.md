@@ -14,7 +14,7 @@ Essa web app foi feito para uso pessoal e para o aprendizado de ferramentas como
 
 ## Como usar
 ### Login
-Ao entrar no site, você verá uma tela de login com os campos de usuário e senha. Os **usuários e senhas** são listados diretamente no código fonte em `app.py` , pois como ele é pesando para uso pessoal, ele não precisa de mais um usuário. Caso queria modificar ou adicionar usuários é só modifica-los no arquivo já mencionado.
+Ao entrar no site, você verá uma tela de login com os campos de usuário e senha. Novos usuários e senha podem ser adicionado usando o script `create_user.py`, para isso troque os valores das variáveis do script e rodá-lo dentro de um python enviroment.
 
 ### Projetos
 Para adicionar projetos vá ao botão **Adicionar tarefas**, onde você deve digitar o nome da tarefa a ser adicionado na caixa de texto em branco, após isso selecione a opção **Novo projeto** para criar um novo projeto, ou escolha uma tarefa/projeto para criar uma nova subtarefa/tarefa.
