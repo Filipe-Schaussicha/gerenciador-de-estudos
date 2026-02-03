@@ -10,7 +10,7 @@ function Principal(){
 
     return (
     <>
-        <div className="bg-amber-50 grid grid-cols-3 min-h-screen max-xl:grid-cols-1">
+        <div className="grid grid-cols-3 max-xl:grid-cols-1">
             {/* Lista de tarefas */}
             <ListaTarefas className={clases + ' bg-orange-50'} />
 

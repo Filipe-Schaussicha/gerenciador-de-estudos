@@ -15,12 +15,12 @@ function Login({onLogin} : Props) {
     const senha = form.get('senha') as string;
 
     await fetch(`${enderecoBack}/logar`, {
-      method: 'POST', headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}, credentials: 'include', body: JSON.stringify({'user': user, 'senha':senha})
+      method: 'POST', headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS'}, credentials: 'include', body: JSON.stringify({'user': user, 'senha':senha})
     }).then(res => res.ok ? onLogin() : alert('Acesso recusado')).catch(() => alert('Erro ao logar'))
   }
 
   return (
-    <div className="bg-amber-50 text-center flex justify-center items-center min-h-screen">
+    <div className="text-center flex justify-center items-center">
       <div className="text-xl">
         <h1 className="text-4xl my-1 font-bold">Login</h1>
 
