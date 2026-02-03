@@ -20,7 +20,7 @@ function Login({onLogin} : Props) {
   }
 
   return (
-    <div className="text-center flex justify-center items-center">
+    <div className="text-center flex justify-center items-center min-h-screen">
       <div className="text-xl">
         <h1 className="text-4xl my-1 font-bold">Login</h1>
 

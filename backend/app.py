@@ -328,14 +328,14 @@ def logar():
 
   if USUARIO == usuario and SENHA == senha:
     session['user_id'] = USUARIO
-    return json.dumps({'msg': 'loginAceito'}), 200
-  
+    return json.dumps({'msg': 'loginAceito'}), 200, {'Access-Control-Allow-Origin': '*'}
+
   return json.dumps({'msg': 'loginRecusado'}), 401
 
 @app.route('/logout')
 def logout():
   """Deslogar"""
   session.clear()
-  return 'deslogado', 200
+  return 'deslogado', 200, {'Access-Control-Allow-Origin': '*'}
 
 #app.run(host="localhost", port=5000, debug=True)

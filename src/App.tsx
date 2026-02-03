@@ -14,7 +14,7 @@ function App() {
   }, [])
 
   return (
-    <div className="bg-amber-50 min-h-screen">
+    <div className="bg-amber-50">
       {logado == 0 ? <p>Esperando resposta BackEnd</p> :
       logado == 1 ? <Principal /> : <Login onLogin={() => setLogado(1)}/>}
     </div>
