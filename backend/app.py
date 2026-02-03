@@ -310,8 +310,8 @@ def ler_tarefas():
 def islogado():
   """Verifica se está logado"""
   if session.get('user_id') is None:
-    return json.dumps({'logado': False}), 401
-  return json.dumps({'logado': True})
+    return json.dumps({'logado': False}), 401, {'Access-Control-Allow-Origin': '*'}
+  return json.dumps({'logado': True}), 200, {'Access-Control-Allow-Origin': '*'}
 
 @app.route('/logar', methods=['POST'])
 def logar():
@@ -321,7 +321,7 @@ def logar():
   data = request.get_json()
 
   if not res.get('user') or not data.get('senha') or not data:
-    return json.dumps({'msg': 'loginRecusado'}), 401
+    return json.dumps({'msg': 'loginRecusado'}), 401, {'Access-Control-Allow-Origin': '*'}
   
   usuario = data.get('user')
   senha = data.get('senha')
@@ -330,7 +330,7 @@ def logar():
     session['user_id'] = USUARIO
     return json.dumps({'msg': 'loginAceito'}), 200, {'Access-Control-Allow-Origin': '*'}
 
-  return json.dumps({'msg': 'loginRecusado'}), 401
+  return json.dumps({'msg': 'loginRecusado'}), 401, {'Access-Control-Allow-Origin': '*'}
 
 @app.route('/logout')
 def logout():
