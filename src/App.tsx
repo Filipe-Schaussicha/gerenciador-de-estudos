@@ -5,17 +5,18 @@ import enderecoBack from "./others/VarsGlobal";
 
 
 function App() {
-  const [logado, setLogado] = useState(false);
+  const [logado, setLogado] = useState(0);
 
   useEffect(() => {
     fetch(`${enderecoBack}/islogado`, {credentials: 'include'}).then(res =>
-      res.status === 200 ? setLogado(true) : setLogado(false)
-    ).catch(() => setLogado(false))
+      res.status === 200 ? setLogado(1) : setLogado(-1)
+    ).catch(() => setLogado(-1))
   }, [])
 
   return (
     <>
-      {logado ? <Principal /> : <Login onLogin={() => setLogado(true)}/>}
+      {logado == 0 ? <p>Esperando resposta BackEnd</p> :
+      logado == 1 ? <Principal /> : <Login onLogin={() => setLogado(1)}/>}
     </>
   )
 }

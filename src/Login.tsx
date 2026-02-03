@@ -15,7 +15,7 @@ function Login({onLogin} : Props) {
     const senha = form.get('senha') as string;
 
     await fetch(`${enderecoBack}/logar`, {
-      method: 'POST', headers: {'Content-Type': 'application/json'}, credentials: 'include', body: JSON.stringify({'user': user, 'senha':senha})
+      method: 'POST', headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}, credentials: 'include', body: JSON.stringify({'user': user, 'senha':senha})
     }).then(res => res.ok ? onLogin() : alert('Acesso recusado')).catch(() => alert('Erro ao logar'))
   }
 
