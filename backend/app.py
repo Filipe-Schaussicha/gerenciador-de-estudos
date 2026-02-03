@@ -20,7 +20,10 @@ app.config.update(
   SESSION_USE_SIGNER=True,
   SESSION_REDIS=redis.from_url("redis://"+os.getenv("REDIS_URL")) 
 )
-CORS(app, supports_credentials=True, origins=[os.getenv("LINK_FRONT")])
+
+LINK_FRONT = os.getenv("LINK_FRONT")
+
+CORS(app, supports_credentials=True, origins=[LINK_FRONT])
 
 Session(app)
 
@@ -310,8 +313,8 @@ def ler_tarefas():
 def islogado():
   """Verifica se está logado"""
   if session.get('user_id') is None:
-    return json.dumps({'logado': False}), 401, {'Access-Control-Allow-Origin': '*'}
-  return json.dumps({'logado': True}), 200, {'Access-Control-Allow-Origin': '*'}
+    return json.dumps({'logado': False}), 401, {'Access-Control-Allow-Origin': LINK_FRONT}
+  return json.dumps({'logado': True}), 200, {'Access-Control-Allow-Origin': LINK_FRONT}
 
 @app.route('/logar', methods=['POST'])
 def logar():
@@ -321,16 +324,16 @@ def logar():
   data = request.get_json()
 
   if not res.get('user') or not data.get('senha') or not data:
-    return json.dumps({'msg': 'loginRecusado'}), 401, {'Access-Control-Allow-Origin': '*'}
+    return json.dumps({'msg': 'loginRecusado'}), 401, {'Access-Control-Allow-Origin': LINK_FRONT}
   
   usuario = data.get('user')
   senha = data.get('senha')
 
   if USUARIO == usuario and SENHA == senha:
     session['user_id'] = USUARIO
-    return json.dumps({'msg': 'loginAceito'}), 200, {'Access-Control-Allow-Origin': '*'}
+    return json.dumps({'msg': 'loginAceito'}), 200, {'Access-Control-Allow-Origin': LINK_FRONT}
 
-  return json.dumps({'msg': 'loginRecusado'}), 401, {'Access-Control-Allow-Origin': '*'}
+  return json.dumps({'msg': 'loginRecusado'}), 401, {'Access-Control-Allow-Origin': LINK_FRONT}
 
 @app.route('/logout')
 def logout():
