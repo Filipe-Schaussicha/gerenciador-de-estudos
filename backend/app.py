@@ -32,6 +32,14 @@ DB_PATH = "static/banco.db"
 USUARIO = os.getenv("USUARIO")
 SENHA = os.getenv("SENHA")
 
+HEADERS = {
+  "Access-Control-Allow-Origin": LINK_FRONT,
+  "Access-Control-Allow-Credentials": "true",
+  "Vary": "Origin",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS"
+}
+
 @app.route('/get_pomodoro_disciplina')
 def get_pomoro_disciplina():
   """Retorna um array com os pomodoros gastos por disciplina"""
@@ -313,8 +321,8 @@ def ler_tarefas():
 def islogado():
   """Verifica se está logado"""
   if session.get('user_id') is None:
-    return json.dumps({'logado': False}), 401, {'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*', 'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS,GET'}
-  return json.dumps({'logado': True}), 200, {'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*', 'Access-Control-Allow-Methods':'POST,PATCH,OPTIONS,GET'}
+    return json.dumps({'logado': False}), 401, HEADERS
+  return json.dumps({'logado': True}), 200, HEADERS
 
 @app.route('/logar', methods=['POST'])
 def logar():
