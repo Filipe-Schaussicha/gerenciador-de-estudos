@@ -313,8 +313,8 @@ def ler_tarefas():
 def islogado():
   """Verifica se está logado"""
   if session.get('user_id') is None:
-    return json.dumps({'logado': False}), 401, {'Access-Control-Allow-Origin': LINK_FRONT}
-  return json.dumps({'logado': True}), 200, {'Access-Control-Allow-Origin': LINK_FRONT}
+    return json.dumps({'logado': False}), 401, {'Access-Control-Allow-Origin': 'true'}
+  return json.dumps({'logado': True}), 200, {'Access-Control-Allow-Origin': 'true'}
 
 @app.route('/logar', methods=['POST'])
 def logar():
@@ -324,21 +324,21 @@ def logar():
   data = request.get_json()
 
   if not res.get('user') or not data.get('senha') or not data:
-    return json.dumps({'msg': 'loginRecusado'}), 401, {'Access-Control-Allow-Origin': LINK_FRONT}
+    return json.dumps({'msg': 'loginRecusado'}), 401, {'Access-Control-Allow-Origin': 'true'}
   
   usuario = data.get('user')
   senha = data.get('senha')
 
   if USUARIO == usuario and SENHA == senha:
     session['user_id'] = USUARIO
-    return json.dumps({'msg': 'loginAceito'}), 200, {'Access-Control-Allow-Origin': LINK_FRONT}
+    return json.dumps({'msg': 'loginAceito'}), 200, {'Access-Control-Allow-Origin': 'true'}
 
-  return json.dumps({'msg': 'loginRecusado'}), 401, {'Access-Control-Allow-Origin': LINK_FRONT}
+  return json.dumps({'msg': 'loginRecusado'}), 401, {'Access-Control-Allow-Origin': 'true'}
 
 @app.route('/logout')
 def logout():
   """Deslogar"""
   session.clear()
-  return 'deslogado', 200, {'Access-Control-Allow-Origin': '*'}
+  return 'deslogado', 200, {'Access-Control-Allow-Origin': 'true'}
 
 #app.run(host="localhost", port=5000, debug=True)
