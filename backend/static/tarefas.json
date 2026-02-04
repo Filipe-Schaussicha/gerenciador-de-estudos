@@ -21,7 +21,7 @@
           {
             "id": "1bf022f8-6387-42c7-b8d4-f4a252e3cc1e",
             "nome": "Cores de fundo diferentes",
-            "feito": false,
+            "feito": true,
             "aberto": true,
             "subtarefas": []
           }
@@ -30,7 +30,7 @@
       {
         "id": "f51109ac-e19e-484c-b056-3d86ae574e68",
         "nome": "Pomodoro timer",
-        "feito": false,
+        "feito": true,
         "aberto": true,
         "subtarefas": [
           {
