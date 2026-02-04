@@ -1,7 +1,7 @@
 import Ciclo from "./pages/Ciclo"
 import Pomodoro from "./pages/Pomodoro"
 import ListaTarefas from "./pages/ListaTarefas"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import enderecoBack from "./others/VarsGlobal"
 
 interface Props{
