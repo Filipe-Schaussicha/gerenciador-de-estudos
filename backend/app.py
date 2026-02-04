@@ -338,7 +338,15 @@ def logar():
 @app.route('/logout')
 def logout():
   """Deslogar"""
-  session.clear()
-  return enviar_resposta({'msg': 'Deslogado'})
+  resp = make_response('Deslogando')
+  resp.set_cookie(
+    'user', 
+    '', 
+    max_age=0,
+    httponly=True,
+    secure=True,
+    samesite='None'     
+  )
+  return resp
 
 #app.run(host="localhost", port=5000, debug=True)

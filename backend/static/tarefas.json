@@ -127,7 +127,7 @@
     "id": "1587d708-2b1a-4473-a021-c0ba595daf30",
     "nome": "Arrumar aparelhos",
     "feito": false,
-    "aberto": true,
+    "aberto": false,
     "subtarefas": [
       {
         "id": "37325d74-7be5-47a3-9c00-7e946a5c7d00",

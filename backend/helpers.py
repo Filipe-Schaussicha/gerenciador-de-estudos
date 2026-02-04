@@ -5,7 +5,7 @@ import sqlite3 as sql
 import os
 
 def esta_logado():
-    if not request.cookies.get('user'):
+    if not request.cookies.get('user') or request.cookies.get('user') == '':
         return True
     return False
 
