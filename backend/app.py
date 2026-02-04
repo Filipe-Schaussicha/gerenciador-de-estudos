@@ -345,7 +345,7 @@ def logout():
     max_age=0,
     httponly=True,
     secure=True,
-    samesite='None'     
+    samesite='None'
   )
   return resp
 
