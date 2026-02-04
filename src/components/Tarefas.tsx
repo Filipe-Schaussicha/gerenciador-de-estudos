@@ -71,7 +71,7 @@ function Tarefas(props: Props){
                 <MenuItem onClick={deletar_tarefa}><i className="fa-solid fa-trash"></i> Deletar</MenuItem>
             </Menu>
             {/*<button className="mr-3"><i className="fa-solid fa-bars"></i></button>*/}
-            <input type="checkbox" checked={feito} className={'mr-3'} onChange={(e)=>{setFeito(!feito);marcar_tarefa_como_feita(!feito)}} />
+            <input type="checkbox" checked={feito} className={'mr-3'} onChange={()=>{setFeito(!feito);marcar_tarefa_como_feita(!feito)}} />
             <p className={`text-left ${feito && 'line-through'} ${props.isTitulo && 'text-xl font-semibold'} ${!props.aberto && props.subtarefas.length > 0 && 'underline'}`}>
                 {props.children}
             </p>
