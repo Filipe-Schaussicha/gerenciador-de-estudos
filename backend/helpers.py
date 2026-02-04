@@ -1,8 +1,13 @@
 import json
-from flask import session, jsonify
+from flask import session, jsonify, request
 from functools import wraps
 import sqlite3 as sql 
 import os
+
+def esta_logado():
+    if not request.cookies.get('user'):
+        return True
+    return False
 
 def enviar_resposta(dados, codigo=200):
     return json.dumps(dados), codigo, {

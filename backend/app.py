@@ -1,6 +1,6 @@
-from flask import Flask, session, request
+from flask import Flask, session, request, make_response
 from flask_session import Session
-from helpers import ler_json, salvar_json, login_required, contatenar_arvore_tarefas, achar_tarefa, ler_bd, enviar_resposta
+from helpers import ler_json, salvar_json, login_required, contatenar_arvore_tarefas, achar_tarefa, ler_bd, enviar_resposta, esta_logado
 from flask_cors import CORS
 import json
 import uuid
@@ -25,7 +25,7 @@ SENHA = os.getenv("SENHA")
 @app.route('/get_pomodoro_disciplina')
 def get_pomoro_disciplina():
   """Retorna um array com os pomodoros gastos por disciplina"""
-  if "user_id" not in session:
+  if esta_logado():
     return enviar_resposta({'msg': 'erro'}, codigo=401)
   
   min_data = '2026-01-01'
@@ -57,7 +57,7 @@ def get_pomoro_disciplina():
 @app.route('/get_pomodoro_data')
 def get_pomoro_data():
   """Retorna um array com os pomodoros gastos por dia"""
-  if "user_id" not in session:
+  if esta_logado():
     return enviar_resposta({'msg': 'erro'}, codigo=401)
   
   min_data = '2026-01-01'
@@ -90,7 +90,7 @@ def get_pomoro_data():
 
 @app.route('/add_tempo')
 def add_tempo():
-  if "user_id" not in session:
+  if esta_logado():
     return enviar_resposta({'msg': 'erro'}, codigo=401)
   if not request.args.get("id"):
     return enviar_resposta({'msg': 'erro'}, codigo=400)
@@ -126,7 +126,7 @@ def add_tempo():
 
 @app.route('/reseta_ciclo')
 def reseta_ciclo():
-    if "user_id" not in session:
+    if esta_logado():
       return enviar_resposta({'msg': 'erro'}, codigo=401)
 
     con = sql.connect(DB_PATH)
@@ -138,7 +138,7 @@ def reseta_ciclo():
 
 @app.route('/add_ciclo')
 def add_ciclo():
-    if "user_id" not in session:
+    if esta_logado():
       return enviar_resposta({'msg': 'erro'}, codigo=401)
     if not request.args.get("nome") or not request.args.get("horas"):
       return enviar_resposta({'msg': 'erro'}, codigo=400)
@@ -153,7 +153,7 @@ def add_ciclo():
 
 @app.route('/apaga_ciclo')
 def apaga_ciclo():
-    if "user_id" not in session:
+    if esta_logado():
       return enviar_resposta({'msg': 'erro'}, codigo=401)
     if not request.args.get("id"):
       return enviar_resposta({'msg': 'erro'}, codigo=400)
@@ -167,7 +167,7 @@ def apaga_ciclo():
 
 @app.route('/ler_ciclo')
 def ler_ciclo():
-    if "user_id" not in session:
+    if esta_logado():
       return enviar_resposta({'msg': 'erro'}, codigo=401)
 
     dados = ler_bd()
@@ -175,7 +175,7 @@ def ler_ciclo():
 
 @app.route('/setar_tarefa_aberta')
 def setar_tarefa_aberta():
-  if "user_id" not in session:
+  if esta_logado():
     return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('id') or not request.args.get('valor'):
     return enviar_resposta({'msg': 'erro'}, codigo=400)
@@ -197,7 +197,7 @@ def setar_tarefa_aberta():
 
 @app.route('/add_tarefa')
 def add_tarefa():
-  if "user_id" not in session:
+  if esta_logado():
     return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('texto'):
     return enviar_resposta({'msg': 'erro'}, codigo=400)
@@ -224,7 +224,7 @@ def add_tarefa():
 
 @app.route('/todas_tarefas_arvore')
 def todas_tarefas_data():
-  if "user_id" not in session:
+  if esta_logado():
     return enviar_resposta({'ok': False}, codigo=401)
   
   dados = ler_json()
@@ -233,7 +233,7 @@ def todas_tarefas_data():
 
 @app.route('/mover_tarefa')
 def mover_tarefa():
-  if "user_id" not in session:
+  if esta_logado():
     return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('id') or not request.args.get('nova_pos'):
     return enviar_resposta({'msg': 'erro'}, codigo=400)
@@ -253,7 +253,7 @@ def mover_tarefa():
 @app.route('/deletar_tarefa')
 def deletar_tarefa_route():
   """ Deleta tarefas """
-  if "user_id" not in session:
+  if esta_logado():
     return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('id'):
     return enviar_resposta({'msg': 'erro'}, codigo=400)
@@ -273,7 +273,7 @@ def deletar_tarefa_route():
 @app.route('/checkar_tarefa')
 def checar_tarefa():
   """ Salva se uma tarefa foi checada ou não """
-  if "user_id" not in session:
+  if esta_logado():
     return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('id_tarefa') or not request.args.get('valor'):
     return enviar_resposta({'msg': 'erro'}, codigo=400)
@@ -302,7 +302,7 @@ def ler_tarefas():
 @app.route('/islogado')
 def islogado():
   """Verifica se está logado"""
-  if session.get('user_id') is None:
+  if esta_logado():
     return enviar_resposta({'logado': False}, codigo=401)
   return enviar_resposta({'logado': True})
 
@@ -320,7 +320,16 @@ def logar():
   senha = data.get('senha')
 
   if USUARIO == usuario and SENHA == senha:
-    session['user_id'] = USUARIO
+    #session['user_id'] = USUARIO
+    res = make_response('Cookie criado')
+    res.set_cookie(
+      key='use',
+      value=USUARIO,
+      max_age=60*60*12,
+      httponly=True,
+      secure=True,
+      samesite='None'     
+    )
     return enviar_resposta({'logado': True})
 
   return enviar_resposta({'logado': False}, codigo=401)
