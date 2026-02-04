@@ -294,9 +294,10 @@ def checar_tarefa():
   return enviar_resposta({'msg': 'success'})
 
 @app.route('/ler_tarefas')
-@login_required
 def ler_tarefas():
   """Envia a lista de tarefas"""
+  if esta_logado():
+    return enviar_resposta({'ok': False}, codigo=401)
   return enviar_resposta(ler_json())
 
 @app.route('/islogado')
@@ -323,14 +324,14 @@ def logar():
     #session['user_id'] = USUARIO
     res = make_response('Cookie criado')
     res.set_cookie(
-      key='use',
+      key='user',
       value=USUARIO,
       max_age=60*60*12,
       httponly=True,
       secure=True,
       samesite='None'     
     )
-    return enviar_resposta({'logado': True})
+    return res
 
   return enviar_resposta({'logado': False}, codigo=401)
 

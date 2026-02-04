@@ -160,7 +160,7 @@
       {
         "id": "70b08b80-0f3d-4fe1-95d8-ae638a61358d",
         "nome": "Notbook",
-        "feito": false,
+        "feito": true,
         "aberto": true,
         "subtarefas": []
       },
