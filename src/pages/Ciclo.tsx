@@ -33,7 +33,7 @@ const Ciclo = (props: Props) => {
             return -1
           }else{
             return 1
-          }
+          };
         }))
       }
     ).catch(()=>{alert('Erro ao carregar ciclo');}).finally(()=>setUpdateValues(false)))

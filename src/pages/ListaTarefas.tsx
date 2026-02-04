@@ -69,9 +69,9 @@ const ListaTarefas = (props: Props) => {
            
         {/* Tarefas */}
         <div className="mt-3">
-            {tarefasCarregadas == 0 && <p>Carregando Tarefas</p>}
-            {tarefasCarregadas == -1 && <p>Erro ao carregar tarefas</p>}
-            {tarefasCarregadas == 1 && tarefas.map((tarefa, i)=>(
+            {tarefasCarregadas == 0 ? <p>Carregando Tarefas</p>
+            : tarefasCarregadas == -1 ? <p>Erro ao carregar tarefas</p> :
+             tarefas.map((tarefa, i)=>(
                 <div key={tarefa['id']} className="bg-orange-100 mt-3 rounded-xl py-3">
                     <Tarefas 
                         onChange={()=>{setRecarregar(true); setRecarregarListaSubtarefasMenu(true)}} 
