@@ -1,6 +1,6 @@
 from flask import Flask, session, request
 from flask_session import Session
-from helpers import ler_json, salvar_json, login_required, contatenar_arvore_tarefas, achar_tarefa, ler_bd
+from helpers import ler_json, salvar_json, login_required, contatenar_arvore_tarefas, achar_tarefa, ler_bd, enviar_resposta
 from flask_cors import CORS
 import json
 import uuid
@@ -14,37 +14,22 @@ import redis
 app = Flask(__name__)
 
 app.secret_key = os.getenv("CHAVE_SECRETA")
-app.config.update(
-  SESSION_TYPE='redis',
-  SESSION_PERMANENT=False,
-  SESSION_USE_SIGNER=True,
-  SESSION_REDIS=redis.from_url("redis://"+os.getenv("REDIS_URL")) 
-)
-
-LINK_FRONT = os.getenv("LINK_FRONT")
-
-CORS(app, supports_credentials=True, origins=[LINK_FRONT])
-
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+CORS(app, supports_credentials=True, origins=[os.getenv("LINK_FRONT")])
 
 DB_PATH = "static/banco.db"
 
 USUARIO = os.getenv("USUARIO")
 SENHA = os.getenv("SENHA")
 
-HEADERS = {
-  "Access-Control-Allow-Origin": LINK_FRONT,
-  "Access-Control-Allow-Credentials": "true",
-  "Vary": "Origin",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS"
-}
-
 @app.route('/get_pomodoro_disciplina')
 def get_pomoro_disciplina():
   """Retorna um array com os pomodoros gastos por disciplina"""
   if "user_id" not in session:
-    return 'erro', 401
+    return enviar_resposta({'msg': 'erro'}, codigo=401)
   
   min_data = '2026-01-01'
 
@@ -52,7 +37,7 @@ def get_pomoro_disciplina():
     try:
       timespan = int(request.args.get("timespan"))
     except ValueError:
-      return 'erro', 400
+      return enviar_resposta({'msg': 'erro'}, codigo=400)
     
     if timespan != -1:
       min_data = (datetime.now() - timedelta(days=timespan)).strftime("%Y-%m-%d")
@@ -70,13 +55,13 @@ def get_pomoro_disciplina():
       "pomodoros": dado[1]
     })
 
-  return json.dumps(formato_final)
+  return enviar_resposta(formato_final)
 
 @app.route('/get_pomodoro_data')
 def get_pomoro_data():
   """Retorna um array com os pomodoros gastos por dia"""
   if "user_id" not in session:
-    return 'erro', 401
+    return enviar_resposta({'msg': 'erro'}, codigo=401)
   
   min_data = '2026-01-01'
 
@@ -84,7 +69,7 @@ def get_pomoro_data():
     try:
       timespan = int(request.args.get("timespan"))
     except ValueError:
-      return 'erro', 400
+      return enviar_resposta({'msg': 'erro'}, codigo=400)
 
     if timespan != -1:
       min_data = (datetime.now() - timedelta(days=timespan)).strftime("%Y-%m-%d")
@@ -104,14 +89,14 @@ def get_pomoro_data():
       "pomodoros": dado[1]
     })
 
-  return json.dumps(formato_final)
+  return enviar_resposta(formato_final)
 
 @app.route('/add_tempo')
 def add_tempo():
   if "user_id" not in session:
-    return 'erro', 401
+    return enviar_resposta({'msg': 'erro'}, codigo=401)
   if not request.args.get("id"):
-    return 'erro', 400
+    return enviar_resposta({'msg': 'erro'}, codigo=400)
 
   dados = ler_bd()
   nome = 'Outros'
@@ -119,7 +104,7 @@ def add_tempo():
   try:
     id = int(request.args.get("id"))
   except ValueError:
-    return 'erro', 400
+    return enviar_resposta({'msg': 'erro'}, codigo=400)
 
   con = sql.connect(DB_PATH)
   cur = con.cursor()
@@ -140,26 +125,26 @@ def add_tempo():
 
   con.commit()
 
-  return 'sucesso', 200
+  return enviar_resposta({'msg': 'success'})
 
 @app.route('/reseta_ciclo')
 def reseta_ciclo():
     if "user_id" not in session:
-      return 'erro', 401
+      return enviar_resposta({'msg': 'erro'}, codigo=401)
 
     con = sql.connect(DB_PATH)
     cur = con.cursor()
     cur.execute("UPDATE disciplinas SET h_estudadas = 0;")
     con.commit()
 
-    return 'sucess'
+    return enviar_resposta({'msg': 'success'})
 
 @app.route('/add_ciclo')
 def add_ciclo():
     if "user_id" not in session:
-      return 'erro', 401
+      return enviar_resposta({'msg': 'erro'}, codigo=401)
     if not request.args.get("nome") or not request.args.get("horas"):
-      return 'erro', 400
+      return enviar_resposta({'msg': 'erro'}, codigo=400)
 
     con = sql.connect(DB_PATH)
     cur = con.cursor()
@@ -167,36 +152,36 @@ def add_ciclo():
     cur.execute("INSERT INTO disciplinas(nome, h_objetivo) VALUES (?, ?);", dados)
     con.commit()
 
-    return 'sucess'
+    return enviar_resposta({'msg': 'success'})
 
 @app.route('/apaga_ciclo')
 def apaga_ciclo():
     if "user_id" not in session:
-      return 'erro', 401
+      return enviar_resposta({'msg': 'erro'}, codigo=401)
     if not request.args.get("id"):
-      return 'erro', 400
+      return enviar_resposta({'msg': 'erro'}, codigo=400)
 
     con = sql.connect(DB_PATH)
     cur = con.cursor()
     cur.execute("DELETE FROM disciplinas WHERE id = ?;", (request.args.get("id")))
     con.commit()
 
-    return 'sucesso', 200
+    return enviar_resposta({'msg': 'success'})
 
 @app.route('/ler_ciclo')
 def ler_ciclo():
     if "user_id" not in session:
-      return 'erro', 401
+      return enviar_resposta({'msg': 'erro'}, codigo=401)
 
     dados = ler_bd()
-    return json.dumps(dados)
+    return enviar_resposta(dados)
 
 @app.route('/setar_tarefa_aberta')
 def setar_tarefa_aberta():
   if "user_id" not in session:
-    return json.dumps({"ok": False}), 401
+    return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('id') or not request.args.get('valor'):
-    return 'erro', 400
+    return enviar_resposta({'msg': 'erro'}, codigo=400)
   
   id = request.args.get('id')
   valor =  True if request.args.get('valor') == 'true' else False
@@ -205,20 +190,20 @@ def setar_tarefa_aberta():
 
   tarefa, _, _ = achar_tarefa(dados, id)
   if tarefa == None:
-    return 'erro', 400
+    return enviar_resposta({'msg': 'erro'}, codigo=400)
 
   tarefa['aberto'] = valor
   
   salvar_json(dados)
 
-  return 'sucess', 200
+  return enviar_resposta({'msg': 'success'})
 
 @app.route('/add_tarefa')
 def add_tarefa():
   if "user_id" not in session:
-    return json.dumps({"ok": False}), 401
+    return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('texto'):
-    return 'erro', 400
+    return enviar_resposta({'msg': 'erro'}, codigo=400)
   
   dados = ler_json()
 
@@ -238,63 +223,63 @@ def add_tarefa():
     dados.append(nova_tarefa)
 
   salvar_json(dados)
-  return 'sucess', 200
+  return enviar_resposta({'msg': 'success'})
 
 @app.route('/todas_tarefas_arvore')
 def todas_tarefas_data():
   if "user_id" not in session:
-    return json.dumps({"ok": False}), 401
+    return enviar_resposta({'ok': False}, codigo=401)
   
   dados = ler_json()
 
-  return json.dumps(contatenar_arvore_tarefas(dados))
+  return enviar_resposta(contatenar_arvore_tarefas(dados))
 
 @app.route('/mover_tarefa')
 def mover_tarefa():
   if "user_id" not in session:
-    return json.dumps({"ok": False}), 401
+    return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('id') or not request.args.get('nova_pos'):
-    return 'erro', 400
+    return enviar_resposta({'msg': 'erro'}, codigo=400)
   
   dados = ler_json()
   _, tarefas, i = achar_tarefa(dados, request.args.get('id'))
   new_i = int(request.args.get('nova_pos')) + i
 
   if tarefas == None or new_i < 0 or new_i >= len(tarefas):
-    return 'erro', 400
+    return enviar_resposta({'msg': 'erro'}, codigo=400)
   
   tarefas[i], tarefas[new_i] = tarefas[new_i], tarefas[i]
 
   salvar_json(dados)  
-  return 'sucess', 200
+  return enviar_resposta({'msg': 'success'})
 
 @app.route('/deletar_tarefa')
 def deletar_tarefa_route():
   """ Deleta tarefas """
   if "user_id" not in session:
-    return json.dumps({"ok": False}), 401
+    return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('id'):
-    return 'erro', 400
+    return enviar_resposta({'msg': 'erro'}, codigo=400)
   
   dados = ler_json()
 
   _, tarefas, i = achar_tarefa(dados, request.args.get('id'))
 
   if tarefas == None:
-    return 'erro', 400
+    return enviar_resposta({'msg': 'erro'}, codigo=400)
   
   tarefas.pop(i)
 
   salvar_json(dados)  
-  return 'sucess', 200
+  return enviar_resposta({'msg': 'success'})
 
 @app.route('/checkar_tarefa')
 def checar_tarefa():
   """ Salva se uma tarefa foi checada ou não """
   if "user_id" not in session:
-    return json.dumps({"ok": False}), 401
+    return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('id_tarefa') or not request.args.get('valor'):
-    return 'erro', 400
+    return enviar_resposta({'msg': 'erro'}, codigo=400)
   
   id = request.args.get('id_tarefa')
   valor =  True if request.args.get('valor') == 'true' else False
@@ -303,26 +288,26 @@ def checar_tarefa():
 
   tarefa, _, _ = achar_tarefa(dados, id)
   if tarefa == None:
-    return 'erro', 400
+    return enviar_resposta({'msg': 'erro'}, codigo=400)
 
   tarefa['feito'] = valor
   
   salvar_json(dados)
 
-  return 'sucess', 200
+  return enviar_resposta({'msg': 'success'})
 
 @app.route('/ler_tarefas')
 @login_required
 def ler_tarefas():
   """Envia a lista de tarefas"""
-  return json.dumps(ler_json())
+  return enviar_resposta(ler_json())
 
 @app.route('/islogado')
 def islogado():
   """Verifica se está logado"""
   if session.get('user_id') is None:
-    return json.dumps({'logado': False}), 401, HEADERS
-  return json.dumps({'logado': True}), 200, HEADERS
+    return enviar_resposta({'logado': False}, codigo=401)
+  return enviar_resposta({'logado': True})
 
 @app.route('/logar', methods=['POST'])
 def logar():
@@ -331,22 +316,22 @@ def logar():
   """
   data = request.get_json()
 
-  if not res.get('user') or not data.get('senha') or not data:
-    return json.dumps({'msg': 'loginRecusado'}), 401
+  if not data.get('user') or not data.get('senha') or not data:
+    return enviar_resposta({'logado': False}, codigo=401)
   
   usuario = data.get('user')
   senha = data.get('senha')
 
   if USUARIO == usuario and SENHA == senha:
     session['user_id'] = USUARIO
-    return json.dumps({'msg': 'loginAceito'}), 200
+    return enviar_resposta({'logado': True})
 
-  return json.dumps({'msg': 'loginRecusado'}), 401
+  return enviar_resposta({'logado': False}, codigo=401)
 
 @app.route('/logout')
 def logout():
   """Deslogar"""
   session.clear()
-  return 'deslogado', 200
+  return enviar_resposta({'msg': 'Deslogado'})
 
 #app.run(host="localhost", port=5000, debug=True)

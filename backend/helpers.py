@@ -2,6 +2,16 @@ import json
 from flask import session, jsonify
 from functools import wraps
 import sqlite3 as sql 
+import os
+
+def enviar_resposta(dados, codigo=200):
+    return json.dumps(dados), codigo, {
+        "Access-Control-Allow-Origin": os.getenv("LINK_FRONT"),
+        "Access-Control-Allow-Credentials": "true",
+        "Vary": "Origin",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS"
+    }
 
 def ler_json(caminho='tarefas'):
     with open(f'static/{caminho}.json', 'r') as tasks:
