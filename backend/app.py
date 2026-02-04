@@ -14,8 +14,12 @@ import redis
 app = Flask(__name__)
 
 app.secret_key = os.getenv("CHAVE_SECRETA")
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
+app.config.update(
+  SESSION_TYPE='redis',
+  SESSION_PERMANENT=False,
+  SESSION_USE_SIGNER=True,
+  SESSION_REDIS=redis.from_url("redis://"+os.getenv("REDIS_URL")) 
+)
 Session(app)
 
 CORS(app, supports_credentials=True, origins=[os.getenv("LINK_FRONT")])
