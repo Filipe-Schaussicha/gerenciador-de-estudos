@@ -46,9 +46,9 @@ const Ciclo = (props: Props) => {
     const form = new FormData(e.currentTarget)
 
     const nome = form.get('nome') as string;
-    const horas = form.get('horas') as string;
+    const pomodoros = form.get('pomodoros') as string;
 
-    fetch(`${enderecoBack}/add_ciclo?nome=${nome}&horas=${horas}`, {credentials: 'include'}).then(res =>
+    fetch(`${enderecoBack}/add_ciclo?nome=${nome}&pomodoros=${pomodoros}`, {credentials: 'include'}).then(res =>
       !res.ok ? alert('Erro ao adicionar disciplina') : setUpdateValues(true)
     ).catch(e => alert(`Erro: ${e}`))
   }
@@ -110,7 +110,7 @@ const Ciclo = (props: Props) => {
               <input type="text" name="nome" autoComplete="off" value={nomeInput} onChange={(e)=>setNomeInput(e.currentTarget.value)} required placeholder="Disciplina" className="bg-white rounded-xl mr-1.5 p-1.5" />
 
               {/* Horas */}
-              <input type="number" name="horas" required value={horasInput} onChange={(e)=>setHorasInput(e.currentTarget.value)} placeholder="Horas" min="0" 
+              <input type="number" name="pomodoros" required value={horasInput} onChange={(e)=>setHorasInput(e.currentTarget.value)} placeholder="Pomodoros" min="0" 
               className="bg-white rounded-xl mr-1.5 p-1.5" />
             </div>
           </form>

@@ -3,11 +3,85 @@ from flask import session, jsonify, request
 from functools import wraps
 import sqlite3 as sql 
 import os
+import psycopg2 as postgress
+
+def execute_sql(comando, argumentos=()):
+    """ Faz um query sql """
+
+    conn = postgress.connect(os.getenv("LINK_DB_POSTGRES"))
+    cur = conn.cursor()
+
+    cur.execute(comando, argumentos)
+
+    try:
+        dados = cur.fetchall()
+    except postgress.ProgrammingError:
+        dados = []
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return dados
+
+def setar_db():
+    """ Seta tabelas, caso ainda não existam """
+
+    conn = postgress.connect(os.getenv("LINK_DB_POSTGRES"))
+    cur = conn.cursor()
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS usuarios(
+            id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            nome TEXT NOT NULL UNIQUE,
+            hash TEXT NOT NULL
+        );
+    """)
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS disciplinas(
+            id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            nome TEXT NOT NULL,
+            h_objetivo INTEGER NOT NULL,
+            h_estudadas INTEGER DEFAULT 0,
+            id_user INTEGER NOT NULL,
+            FOREIGN KEY (id_user) REFERENCES usuarios(id)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE
+        );
+    """)
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS historico(
+            id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            data DATE,
+            horas INTEGER DEFAULT 1,
+            disciplina TEXT NOT NULL,
+            id_user INTEGER NOT NULL,
+            FOREIGN KEY (id_user) REFERENCES usuarios(id)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE
+        );
+    """)
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS tarefas(
+            id_user INTEGER PRIMARY KEY,
+            tarefas JSON NOT NULL,
+            FOREIGN KEY (id_user) REFERENCES usuarios(id)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE
+        );
+    """)
+
+    conn.commit()
+    cur.close()
+    conn.close()
 
 def esta_logado():
     if not request.cookies.get('user') or request.cookies.get('user') == '':
-        return True
-    return False
+        return None
+    return request.cookies.get('user')
 
 def enviar_resposta(dados, codigo=200):
     return json.dumps(dados), codigo, {
@@ -18,22 +92,25 @@ def enviar_resposta(dados, codigo=200):
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS"
     }
 
-def ler_json(caminho='tarefas'):
-    with open(f'static/{caminho}.json', 'r') as tasks:
-        dados = json.load(tasks)
+def ler_json():
+    user_id = esta_logado()
+    if not esta_logado():
+        return []
 
-    return dados
+    dados = execute_sql("SELECT tarefas FROM tarefas WHERE id_user = %s;", (user_id,))
 
-def salvar_json(dados, caminho='tarefas'):
-    with open(f'static/{caminho}.json', 'w') as tasks:
-        tasks.write(json.dumps(dados, indent=2))
+    if dados == []:
+        return dados
+    return dados[0][0]
 
-def login_required(fn):
-    def wrapper(*args, **kwargs):
-        if "user_id" not in session:
-            return jsonify({"error": "unauthorized"}), 401
-        return fn(*args, **kwargs)
-    return wrapper
+def salvar_json(dados):
+    user_id = esta_logado()
+    if not esta_logado():
+        return
+
+    dados_json = json.dumps(dados)
+
+    execute_sql("INSERT INTO tarefas VALUES (%s, %s) ON CONFLICT (id_user) DO UPDATE SET tarefas = %s;", (user_id, dados_json, dados_json))
 
 def achar_tarefa(tarefas: list, id_tarefa: str):
     """
@@ -63,14 +140,11 @@ def contatenar_arvore_tarefas(tarefas: list, texto=''):
     return arr
 
 def ler_bd():
-    con = sql.connect("static/banco.db")
-    cur = con.cursor()
+    id_user = esta_logado()
+    if not id_user:
+        return []
 
-    res = cur.execute("SELECT * FROM disciplinas;")
-
-    dados = res.fetchall()
-
-    con.close()
+    dados = execute_sql("SELECT * FROM disciplinas WHERE id_user = %s;", (id_user, ))
 
     final = []
 

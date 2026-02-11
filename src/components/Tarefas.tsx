@@ -18,7 +18,7 @@ function Tarefas(props: Props){
 
     // Marca tarefas
     function marcar_tarefa_como_feita(valor: boolean){
-        fetch(`${enderecoBack}/checkar_tarefa?id_tarefa=${props.id}&valor=${valor}`, {credentials:'include'}).then(
+        fetch(`${enderecoBack}/checkar_tarefa?id=${props.id}&valor=${valor}`, {credentials:'include'}).then(
             res => {
                 if(res.ok){
                     
