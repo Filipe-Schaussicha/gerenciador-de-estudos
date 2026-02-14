@@ -6,11 +6,9 @@ from datetime import datetime, timedelta
 import os
 import psycopg2 as postgress
 
-id_user = 1
-
 @app.route('/reseta_ciclo')
 def reseta_ciclo():
-    execute_sql("UPDATE disciplinas SET h_estudadas = 0 WHERE id_user = %s;", (id_user,))
+    execute_sql("UPDATE disciplinas SET h_estudadas = 0;")
 
     return enviar_resposta({'msg': 'Sucesso'})
 
@@ -19,8 +17,8 @@ def add_ciclo():
     if not request.args.get("nome") or not request.args.get("pomodoros"):
       return enviar_resposta({'msg': 'Falta de parâmetros'}, codigo=400)
 
-    dados = (request.args.get("nome"), request.args.get("pomodoros"), id_user)
-    execute_sql("INSERT INTO disciplinas(nome, h_objetivo, id_user) VALUES (%s, %s, %s);", dados)
+    dados = (request.args.get("nome"), request.args.get("pomodoros"))
+    execute_sql("INSERT INTO disciplinas(nome, h_objetivo) VALUES (?, ?);", dados)
 
     return enviar_resposta({'msg': 'Sucesso'})
 
@@ -29,7 +27,7 @@ def apaga_ciclo():
     if not request.args.get("id"):
       return enviar_resposta({'msg': 'Falta de parâmetros'}, codigo=400)
 
-    execute_sql("DELETE FROM disciplinas WHERE id = %s AND id_user = %s;", (request.args.get("id"), id_user))
+    execute_sql("DELETE FROM disciplinas WHERE id = ?;", (request.args.get("id")))
 
     return enviar_resposta({'msg': 'Sucesso'})
 
@@ -52,8 +50,8 @@ def get_pomoro_disciplina():
     if timespan != -1:
       min_data = (datetime.now() - timedelta(days=timespan)).strftime("%Y-%m-%d")
 
-  dados = execute_sql("SELECT disciplina, SUM(horas) FROM historico WHERE data >= %s AND id_user = %s GROUP BY disciplina ORDER BY SUM(horas) DESC;", 
-    (min_data, id_user))
+  dados = execute_sql("SELECT disciplina, SUM(horas) FROM historico WHERE data >= ? GROUP BY disciplina ORDER BY SUM(horas) DESC;", 
+    (min_data,))
 
   formato_final = []
   for dado in dados:
@@ -78,15 +76,15 @@ def get_pomoro_data():
     if timespan != -1:
       min_data = (datetime.now() - timedelta(days=timespan)).strftime("%Y-%m-%d")
 
-  dados = execute_sql("SELECT data, SUM(horas) FROM historico WHERE data >= %s AND id_user = %s GROUP BY data ORDER BY data ASC;", 
-    (min_data, id_user))
+  dados = execute_sql("SELECT data, SUM(horas) FROM historico WHERE data >= ? GROUP BY data ORDER BY data ASC;", 
+    (min_data,))
 
   print(dados)
 
   formato_final = []
   for dado in dados:
     formato_final.append({
-      "data": dado[0].strftime("%Y-%m-%d"),
+      "data": dado[0],
       "pomodoros": dado[1]
     })
 
@@ -105,29 +103,16 @@ def add_tempo():
   except ValueError:
     return enviar_resposta({'msg': 'erro'}, codigo=400)
 
-  conn = postgress.connect(os.getenv("LINK_DB_POSTGRES"))
-  cur = conn.cursor()
-
   for dado in dados:
     if dado["id"] == id:
-      cur.execute("UPDATE disciplinas SET h_estudadas = %s WHERE id = %s AND id_user = %s;", (dado["estudadas"] + 1, dado["id"], id_user))
+      execute_sql("UPDATE disciplinas SET h_estudadas = ?;", (dado["estudadas"] + 1,))
       nome = dado["nome"]
 
-  cur.execute("""
-    DO $$
-    BEGIN
-      IF NOT EXISTS(
-        SELECT * FROM historico WHERE data = %s AND disciplina = %s AND id_user = %s
-      ) THEN
-        INSERT INTO historico(data, disciplina, id_user) VALUES (%s, %s, %s);
-      ELSE
-        UPDATE historico SET horas = horas + 1 WHERE data = %s AND disciplina = %s AND id_user = %s;
-      END IF;
-    END $$;
-  """, (hoje, nome, id_user, hoje, nome, id_user, hoje, nome, id_user))
-
-  conn.commit()
-  cur.close()
-  conn.close()
+  execute_sql("""
+    INSERT INTO historico (data, disciplina, horas)
+    VALUES (?, ?, 1)
+    ON CONFLICT(data, disciplina)
+    DO UPDATE SET horas = horas + 1;
+  """, (hoje, nome))
 
   return enviar_resposta({'msg': 'success'})

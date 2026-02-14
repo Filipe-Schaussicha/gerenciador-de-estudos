@@ -3,81 +3,51 @@ from flask import session, jsonify, request
 from functools import wraps
 import sqlite3 as sql 
 import os
-import psycopg2 as postgress
 import json
 
 user_id = 1
 
 def execute_sql(comando, argumentos=()):
     """ Faz um query sql """
-    conn = postgress.connect(os.getenv("LINK_DB_POSTGRES"))
+    conn = sql.connect("banco.db")
     cur = conn.cursor()
 
-    cur.execute(comando, argumentos)
+    res = cur.execute(comando, argumentos)
 
-    try:
-        dados = cur.fetchall()
-    except postgress.ProgrammingError:
-        dados = []
+    dados = res.fetchall()
 
     conn.commit()
-    cur.close()
-    conn.close()
 
     return dados
 
 def setar_db():
     """ Seta tabelas, caso ainda não existam """
-    conn = postgress.connect(os.getenv("LINK_DB_POSTGRES"))
+    conn = sql.connect("banco.db")
     cur = conn.cursor()
 
     cur.execute("""
-        CREATE TABLE IF NOT EXISTS usuarios(
-            id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-            nome TEXT NOT NULL UNIQUE,
-            hash TEXT NOT NULL
-        );
-    """)
-
-    cur.execute("""
         CREATE TABLE IF NOT EXISTS disciplinas(
-            id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
             h_objetivo INTEGER NOT NULL,
-            h_estudadas INTEGER DEFAULT 0,
-            id_user INTEGER NOT NULL,
-            FOREIGN KEY (id_user) REFERENCES usuarios(id)
-                ON DELETE CASCADE
-                ON UPDATE CASCADE
+            h_estudadas INTEGER DEFAULT 0
         );
     """)
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS historico(
-            id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
             data DATE,
             horas INTEGER DEFAULT 1,
-            disciplina TEXT NOT NULL,
-            id_user INTEGER NOT NULL,
-            FOREIGN KEY (id_user) REFERENCES usuarios(id)
-                ON DELETE CASCADE
-                ON UPDATE CASCADE
+            disciplina TEXT NOT NULL
         );
     """)
 
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS tarefas(
-            id_user INTEGER PRIMARY KEY,
-            tarefas JSON NOT NULL,
-            FOREIGN KEY (id_user) REFERENCES usuarios(id)
-                ON DELETE CASCADE
-                ON UPDATE CASCADE
-        );
-    """)
+    cur.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_historico_unique ON historico(data, disciplina);")
 
     conn.commit()
-    cur.close()
-    conn.close()
+
+    print("DEV: Tabelas criadas!")
 
 def enviar_resposta(dados, codigo=200):
     return json.dumps(dados), codigo, {
@@ -132,7 +102,7 @@ def contatenar_arvore_tarefas(tarefas: list, texto=''):
     return arr
 
 def ler_bd():
-    dados = execute_sql("SELECT * FROM disciplinas WHERE id_user = %s;", (id_user, ))
+    dados = execute_sql("SELECT * FROM disciplinas;")
 
     final = []
 
