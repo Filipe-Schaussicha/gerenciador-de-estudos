@@ -30,3 +30,5 @@ backend/older/
 backend/__pycache__/
 .env
 teste.py
+tarefas.json
+banco.db

@@ -1,26 +1,21 @@
 from app import app
 
-from helpers import enviar_resposta, esta_logado, execute_sql, ler_bd
+from helpers import enviar_resposta, execute_sql, ler_bd
 from flask import request
 from datetime import datetime, timedelta
 import os
 import psycopg2 as postgress
 
+id_user = 1
+
 @app.route('/reseta_ciclo')
 def reseta_ciclo():
-    id_user = esta_logado()
-    if not id_user:
-      return enviar_resposta({'msg': 'Não está logado'}, codigo=401)
-
     execute_sql("UPDATE disciplinas SET h_estudadas = 0 WHERE id_user = %s;", (id_user,))
 
     return enviar_resposta({'msg': 'Sucesso'})
 
 @app.route('/add_ciclo')
 def add_ciclo():
-    id_user = esta_logado()
-    if not id_user:
-      return enviar_resposta({'msg': 'Não está logado'}, codigo=401)
     if not request.args.get("nome") or not request.args.get("pomodoros"):
       return enviar_resposta({'msg': 'Falta de parâmetros'}, codigo=400)
 
@@ -31,9 +26,6 @@ def add_ciclo():
 
 @app.route('/apaga_ciclo')
 def apaga_ciclo():
-    id_user = esta_logado()
-    if not id_user:
-      return enviar_resposta({'msg': 'Não está logado'}, codigo=401)
     if not request.args.get("id"):
       return enviar_resposta({'msg': 'Falta de parâmetros'}, codigo=400)
 
@@ -43,19 +35,12 @@ def apaga_ciclo():
 
 @app.route('/ler_ciclo')
 def ler_ciclo():
-    if not esta_logado():
-      return enviar_resposta({'msg': 'Não está logado'}, codigo=401)
-
     dados = ler_bd()
     return enviar_resposta(dados)
 
 @app.route('/get_pomodoro_disciplina')
 def get_pomoro_disciplina():
   """Retorna um array com os pomodoros gastos por disciplina"""
-  id_user = esta_logado()
-  if not id_user:
-    return enviar_resposta({'msg': 'Não está logado'}, codigo=401)
-  
   min_data = '2026-01-01'
 
   if request.args.get("timespan"):
@@ -82,10 +67,6 @@ def get_pomoro_disciplina():
 @app.route('/get_pomodoro_data')
 def get_pomoro_data():
   """Retorna um array com os pomodoros gastos por dia"""
-  id_user = esta_logado()
-  if not id_user:
-    return enviar_resposta({'msg': 'Não está logado'}, codigo=401)
-  
   min_data = '2026-01-01'
 
   if request.args.get("timespan"):
@@ -113,9 +94,6 @@ def get_pomoro_data():
 
 @app.route('/add_tempo')
 def add_tempo():
-  id_user = esta_logado()
-  if not id_user:
-    return enviar_resposta({'msg': 'Não está logado'}, codigo=401)
   if not request.args.get("id"):
     return enviar_resposta({'msg': 'Falta de parâmetros'}, codigo=400)
 

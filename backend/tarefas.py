@@ -1,13 +1,11 @@
 from app import app
 
 from flask import request
-from helpers import ler_json, salvar_json, contatenar_arvore_tarefas, achar_tarefa, enviar_resposta, esta_logado, execute_sql
+from helpers import ler_json, salvar_json, contatenar_arvore_tarefas, achar_tarefa, enviar_resposta, execute_sql
 import uuid
 
 @app.route('/setar_tarefa_aberta')
 def setar_tarefa_aberta():
-  if not esta_logado():
-    return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('id') or not request.args.get('valor'):
     return enviar_resposta({'msg': 'erro'}, codigo=400)
   
@@ -28,8 +26,6 @@ def setar_tarefa_aberta():
 
 @app.route('/add_tarefa')
 def add_tarefa():
-  if not esta_logado():
-    return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('texto'):
     return enviar_resposta({'msg': 'Falta do parâmetro texto'}, codigo=400)
   
@@ -55,17 +51,12 @@ def add_tarefa():
 
 @app.route('/todas_tarefas_arvore')
 def todas_tarefas_data():
-  if not esta_logado():
-    return enviar_resposta({'ok': False}, codigo=401)
-  
   dados = ler_json()
 
   return enviar_resposta(contatenar_arvore_tarefas(dados))
 
 @app.route('/mover_tarefa')
 def mover_tarefa():
-  if not esta_logado():
-    return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('id') or not request.args.get('nova_pos'):
     return enviar_resposta({'msg': 'Falta de informações'}, codigo=400)
   
@@ -88,8 +79,6 @@ def mover_tarefa():
 @app.route('/deletar_tarefa')
 def deletar_tarefa_route():
   """ Deleta tarefas """
-  if not esta_logado():
-    return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('id'):
     return enviar_resposta({'msg': 'Falta de informações'}, codigo=400)
   
@@ -108,8 +97,6 @@ def deletar_tarefa_route():
 @app.route('/checkar_tarefa')
 def checar_tarefa():
   """ Salva se uma tarefa foi checada ou não """
-  if not esta_logado():
-    return enviar_resposta({'ok': False}, codigo=401)
   if not request.args.get('id') or not request.args.get('valor'):
     return enviar_resposta({'msg': 'Falta de parâmetros'}, codigo=400)
   
@@ -131,6 +118,4 @@ def checar_tarefa():
 @app.route('/ler_tarefas')
 def ler_tarefas():
   """Envia a lista de tarefas"""
-  if not esta_logado():
-    return enviar_resposta({'ok': False}, codigo=401)
   return enviar_resposta(ler_json())

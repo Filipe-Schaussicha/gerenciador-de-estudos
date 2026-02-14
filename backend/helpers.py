@@ -4,10 +4,12 @@ from functools import wraps
 import sqlite3 as sql 
 import os
 import psycopg2 as postgress
+import json
+
+user_id = 1
 
 def execute_sql(comando, argumentos=()):
     """ Faz um query sql """
-
     conn = postgress.connect(os.getenv("LINK_DB_POSTGRES"))
     cur = conn.cursor()
 
@@ -26,7 +28,6 @@ def execute_sql(comando, argumentos=()):
 
 def setar_db():
     """ Seta tabelas, caso ainda não existam """
-
     conn = postgress.connect(os.getenv("LINK_DB_POSTGRES"))
     cur = conn.cursor()
 
@@ -78,11 +79,6 @@ def setar_db():
     cur.close()
     conn.close()
 
-def esta_logado():
-    if not request.cookies.get('user') or request.cookies.get('user') == '':
-        return None
-    return request.cookies.get('user')
-
 def enviar_resposta(dados, codigo=200):
     return json.dumps(dados), codigo, {
         "Access-Control-Allow-Origin": os.getenv("LINK_FRONT"),
@@ -93,24 +89,20 @@ def enviar_resposta(dados, codigo=200):
     }
 
 def ler_json():
-    user_id = esta_logado()
-    if not esta_logado():
+    try:
+        with open('tarefas.json', 'r') as file:
+            dados = json.loads(file.read())
+    except FileNotFoundError:
+        salvar_json([])
         return []
 
-    dados = execute_sql("SELECT tarefas FROM tarefas WHERE id_user = %s;", (user_id,))
-
-    if dados == []:
-        return dados
-    return dados[0][0]
+    return dados
 
 def salvar_json(dados):
-    user_id = esta_logado()
-    if not esta_logado():
-        return
-
     dados_json = json.dumps(dados)
 
-    execute_sql("INSERT INTO tarefas VALUES (%s, %s) ON CONFLICT (id_user) DO UPDATE SET tarefas = %s;", (user_id, dados_json, dados_json))
+    with open('tarefas.json', 'w') as file:
+        file.write(json.dumps(dados, indent=4))
 
 def achar_tarefa(tarefas: list, id_tarefa: str):
     """
@@ -140,10 +132,6 @@ def contatenar_arvore_tarefas(tarefas: list, texto=''):
     return arr
 
 def ler_bd():
-    id_user = esta_logado()
-    if not id_user:
-        return []
-
     dados = execute_sql("SELECT * FROM disciplinas WHERE id_user = %s;", (id_user, ))
 
     final = []

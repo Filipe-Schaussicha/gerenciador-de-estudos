@@ -42,10 +42,7 @@ const Pomodoro = (props: Props) => {
 
     // Mostra alerta se não foi pulado
     if(!pulado){
-      let texto = tipoTimer != 0 ? 'Volte ao trabalho!' : 'Descanse um pouco'
-
       play_alerta()
-      alert(texto)
     }
     
     // Muda o tipo de timer

@@ -6,7 +6,8 @@ function createWindow () {
     height: 600,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    autoHideMenuBar: true
   })
 
   win.loadURL('http://localhost:5173/')

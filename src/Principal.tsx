@@ -2,27 +2,11 @@ import Ciclo from "./pages/Ciclo"
 import Pomodoro from "./pages/Pomodoro"
 import ListaTarefas from "./pages/ListaTarefas"
 import { useState } from "react"
-import enderecoBack from "./others/VarsGlobal"
 
-interface Props{
-    onDeslogar: ()=>void
-}
-
-function Principal({onDeslogar} : Props){
+function Principal(){
     const clases = 'p-10 text-center'
 
     const [fimTimerPomodoro, setFimTimerPomodoro] = useState(0)
-
-    async function deslogar(){
-        const res = await fetch(`${enderecoBack}/logout`, {credentials: 'include'})
-
-        if(res.ok){
-            console.log('Deslogado com sucesso');
-            onDeslogar()
-        }else{
-            console.log('Erro ao deslogar')
-        }
-    }
 
     return (
     <div className="min-h-screen flex flex-col">
@@ -40,7 +24,6 @@ function Principal({onDeslogar} : Props){
         <footer className="bg-orange-200 xl:col-span-3 py-1 px-3">
             <nav className="text-sm">
                 <a href="https://github.com/Filipe-Schaussicha/gerenciador-de-estudos" target="_blank" className="mr-3 hover:underline">Repositório no GitHub</a>
-                <a onClick={deslogar} className="mr-3 hover:underline cursor-pointer">Deslogar</a>
             </nav>
         </footer>
     </div>
